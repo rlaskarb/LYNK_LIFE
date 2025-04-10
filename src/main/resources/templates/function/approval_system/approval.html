@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <title>결재자 추가</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+</head>
+<body>
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+<script src="/js/common.js"></script>
+
+<!-- 메인 페이지 -->
+<div class="right-container">
+    <!-- 헤더 영역(달력) -->
+    <header th:replace="~{common/header :: headerFragment}"></header>
+    <script src="/js/calendar.js"></script>
+
+    <section class="main-content">
+
+
+<form id="approvalForm" th:action="@{/approval/addApproval}" th:object="${approvalList}"  method="post" onsubmit="return validateForm()">
+    <div id="approverContainer">
+
+        <!-- 결재자 블록이 여기에 동적으로 추가됩니다 -->
+    </div>
+
+    <input type="hidden" id="draftNoInput" name="draftNo" th:value="${draftNo}">
+    <button type="button" id="addApproverBtn" data-toggle="modal" data-target="#employeeModal">결재자 추가</button>
+    <button type="submit">저장</button>
+</form>
+
+<!-- 직원 선택 모달 -->
+<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="employeeModalLabel">결재자 선택</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>사번</th>
+                        <th>부서</th>
+                        <th>직급</th>
+                        <th>이름</th>
+                        <th>선택</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="employee : ${employees}">
+                        <td th:text="${employee.employeeNo}"></td>
+                        <td th:text="${employee.departmentName}"></td>
+                        <td th:text="${employee.position}"></td>
+                        <td th:text="${employee.employeeName}"></td>
+
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary select-employee"
+                                    th:data-employee-no="${employee.employeeNo}"
+                                    th:data-department-name="${employee.departmentName}"
+                                    th:data-position="${employee.position}"
+                                    th:data-employee-name="${employee.employeeName}">
+
+                                선택
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </section>
+
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+
+<script th:inline="javascript">
+    var approverCount = 0;  // 현재 선택한 결재자 숫자
+    var maxApprovers = 5;   // 결재자 최대 숫자
+    var selectedEmployees = [];  // 선택된 직원들의 사번을 저장할 배열
+    var empNo = /*[[${myEmpNo}]]*/ 'default';   // 결재자 선택목록에서 본인을 제외하기 위해 받아옴
+    var draftNo = /*[[${draftNo}]]*/ 'default';
+    empNo = Number(empNo);
+
+    console.log("draftNo", draftNo);
+    selectedEmployees.push(empNo);
+
+    $(document).ready(function() {
+        $('#employeeModal').on('click', '.select-employee', function() {
+            var employeeNo = $(this).data('employee-no');
+            var departmentName = $(this).data('department-name');
+            var position = $(this).data('position');
+            var employeeName = $(this).data('employee-name');
+
+
+            if (selectedEmployees.includes(employeeNo)) {
+                alert('이미 선택된 직원입니다. 다른 직원을 선택해 주세요.');
+                return;
+            }
+            console.log("departmentName", departmentName)
+            addApprover(employeeNo, departmentName, employeeName, position, draftNo);
+            selectedEmployees.push(employeeNo);  // 선택된 직원 사번 추가
+            $('#employeeModal').modal('hide');
+        });
+    });
+
+    function addApprover(employeeNo, departmentName, employeeName, position, draftNo) {
+        if (approverCount >= maxApprovers) {
+            alert('최대 5명의 결재자만 추가할 수 있습니다.');
+            return;
+        }
+
+        var container = document.getElementById('approverContainer');
+        var newBlock = document.createElement('div');
+        newBlock.className = 'approver-block';
+        newBlock.innerHTML = `
+            <h3>결재자 ${approverCount + 1}</h3>
+            <input type="hidden" name="approvals[${approverCount}].approvalMemo" value="" >
+            <input type="hidden" name="approvals[${approverCount}].draftNo" value="${draftNo}" readonly >
+            <input type="hidden" name="approvals[${approverCount}].approvalState" value="0" >
+            <input type="hidden" name="approvals[${approverCount}].approvalPosible" value="0" >
+            <input type="text" name="approvals[${approverCount}].employeeNo" value="${employeeNo}" readonly>
+            <input type="text" name="approvals[${approverCount}].departmentName" value="${departmentName}" readonly>
+            <input type="text" name="approvals[${approverCount}].position" value="${position}" readonly>
+            <input type="text" name="approvals[${approverCount}].employeeName" value="${employeeName}" readonly>
+
+            <label>결재 순서:
+                <input type="number" name="approvals[${approverCount}].approvalStep" min="1" max="${maxApprovers}" value="${approverCount + 1}" required>
+            </label>
+
+            <button type="button" onclick="removeApprover(this)">삭제</button>
+        `;
+
+        var approvalStep = this.value;
+
+        container.appendChild(newBlock);
+
+
+        approverCount++;
+
+        updateApproverNumbers();
+    }
+
+    function removeApprover(button) {
+        var employeeNo = button.parentElement.querySelector('input[name^="approvals"][name$=".employeeNo"]').value;
+        var index = selectedEmployees.indexOf(employeeNo);
+        if (index > -1) {
+            selectedEmployees.splice(index, 1);  // 선택된 직원 목록에서 제거
+        }
+
+        button.parentElement.remove();
+        approverCount--;
+        updateApproverNumbers();
+    }
+
+    function updateApproverNumbers() {
+        var blocks = document.getElementsByClassName('approver-block');
+        for (var i = 0; i < blocks.length; i++) {
+            blocks[i].getElementsByTagName('h3')[0].innerText = `결재자 ${i + 1}`;
+            blocks[i].getElementsByTagName('input')[0].name = `approvals[${i}].employeeNo`;
+            blocks[i].getElementsByTagName('input')[2].name = `approvals[${i}].approvalStep`;
+            blocks[i].getElementsByTagName('input')[2].max = approverCount;
+        }
+    }
+
+    function updateModalButtons() {
+        $('.select-employee').each(function() {
+            var employeeNo = $(this).data('employee-no');
+            if (selectedEmployees.includes(employeeNo)) {
+                $(this).prop('disabled', true).text('선택됨').removeClass('btn-primary').addClass('btn-secondary');
+            } else {
+                $(this).prop('disabled', false).text('선택').removeClass('btn-secondary').addClass('btn-primary');
+            }
+        });
+    }
+
+    function updateApproverNumbers() {
+        var blocks = document.getElementsByClassName('approver-block');
+        for (var i = 0; i < blocks.length; i++) {
+            blocks[i].getElementsByTagName('h3')[0].innerText = `결재자 ${i + 1}`;
+            var inputs = blocks[i].getElementsByTagName('input');
+            for (var j = 0; j < inputs.length; j++) {
+                if (inputs[j].name.endsWith('.employeeNo')) {
+                    inputs[j].name = `approvals[${i}].employeeNo`;
+                } else if (inputs[j].name.endsWith('.approvalStep')) {
+                    inputs[j].name = `approvals[${i}].approvalStep`;
+                    inputs[j].max = approverCount;
+                }
+            }
+        }
+    }
+
+    function validateForm() {
+        var steps = document.querySelectorAll('input[name$=".approvalStep"]');
+        var usedSteps = new Set();
+        for (var i = 0; i < steps.length; i++) {
+            var step = parseInt(steps[i].value);
+            usedSteps.add(step);
+        }
+        return true;
+    }
+    // 모달이 열릴 때마다 버튼 상태 업데이트
+    $('#employeeModal').on('show.bs.modal', function () {
+        updateModalButtons();
+    });
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous">
+
+    </script>
+
+</body>
+</html>

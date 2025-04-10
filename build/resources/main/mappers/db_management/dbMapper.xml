@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.db_management.model.dao.DbMapper">
+
+    <!-- 보험회사 등록 , 조회 , 삭제 -->
+
+    <insert id="insertProduct">
+        INSERT INTO productManage(product_category,product_no, product_name)
+        VALUES (#{productCategory}, #{productNo}, #{productName})
+    </insert>
+
+    <select id="selectProductsByCompany" resultType="com.semi.lynk.function.db_management.model.dto.ProductManageDTO">
+        SELECT
+            product_category AS productCategory,
+            product_no AS productNo,
+            product_name AS productName
+        FROM
+            productManage;
+    </select>
+
+    <delete id="deleteProductByCompany" parameterType="String">
+        DELETE
+        FROM
+            productManage
+        WHERE
+            product_no = #{productNo};
+    </delete>
+
+
+<!-- ================================================================================================================== -->
+
+
+    <!--고객 등록-->
+
+    <insert id="insertCustomer">
+        INSERT INTO customer (customer_no, customer_name, customer_ssn, customer_mobile, customer_addr, customer_email)
+        VALUES (#{customerNo}, #{customerName}, #{customerSsn}, #{customerMobile}, #{customerAddr}, #{customerEmail})
+    </insert>
+
+    <!--고객 조회-->
+    <select id="selectCustomerList" resultType="com.semi.lynk.function.db_management.model.dto.CustomerDTO">
+        SELECT
+            customer_no AS customerNo,
+            customer_name AS customerName,
+            customer_ssn AS customerSsn,
+            customer_mobile AS customerMobile,
+            customer_addr AS customerAddr
+        FROM
+            customer;
+    </select>
+
+    <delete id="deleteCustomer">
+        DELETE FROM customer WHERE customer_no = #{customerNo};
+    </delete>
+
+
+
+
+
+<!--=================================================================================================================== -->
+
+    <!--사원(설계사) 데이터 조회-->
+
+    <select id="selectAllEmployees" resultType="com.semi.lynk.function.db_management.model.dto.EmployeeDTO">
+        SELECT
+            employee_no AS employeeNo,
+            employee_name AS employeeName
+        FROM
+            employee;
+    </select>
+
+    <!--고객 데이터 조회-->
+
+    <select id="selectAllCustomers" resultType="com.semi.lynk.function.db_management.model.dto.CustomerDTO">
+        SELECT
+             customer_no AS customerNo,
+             customer_name AS customerName,
+             customer_ssn AS customerSsn,
+             customer_mobile AS customerMobile,
+             customer_email AS customerEmail
+        FROM
+            customer;
+    </select>
+
+
+    <!-- 상품 데이터 조회 -->
+    <select id="searchProducts" parameterType="map"  resultType="com.semi.lynk.function.db_management.model.dto.ProductManageDTO">
+        SELECT
+            product_category AS productCategory,
+            product_no AS productNo,
+            product_name AS productName
+        FROM
+            productManage
+        WHERE
+            (#{keyword} IS NULL OR product_name LIKE CONCAT('%', #{keyword}, '%'))
+            AND (#{insuranceCode} IS NULL OR product_category = #{insuranceCode})
+        ORDER BY
+            product_category;
+    </select>
+
+<!--==================================================================================================================-->
+
+    <insert id="insertContract" parameterType="com.semi.lynk.function.db_management.model.dto.ContractDTO">
+        INSERT INTO contract (
+        contract_no, contract_date, contract_duration, each_payment, basic_pay_with,
+        payment_term, payment_day, insured_name, insured_ssn, other_matters, product_no,
+        customer_no, employee_no, last_reform_date, last_inseminatee
+        )
+        VALUES (
+        #{contractNo}, #{contractDate}, #{contractDuration}, #{eachPayment}, #{basicPayWith},
+        #{paymentTerm}, #{paymentDay}, #{insuredName}, #{insuredSsn}, #{otherMatters}, #{productNo},
+        #{customerNo}, #{employeeNo}, #{lastReformDate}, #{lastInseminatee}
+        )
+    </insert>
+
+
+    <select id="findLatestContract" resultType="com.semi.lynk.function.db_management.model.dto.ContractDTO">
+        SELECT
+        contract_no AS contractNo,
+        contract_date AS contractDate,
+        contract_duration AS contractDuration,
+        each_payment AS eachPayment,
+        basic_pay_with AS basicPayWith,
+        payment_term AS paymentTerm,
+        payment_day AS paymentDay,
+        insured_name AS insuredName,
+        insured_ssn AS insuredSsn,
+        other_matters AS otherMatters,
+        product_no AS productNo,
+        customer_no AS customerNo,
+        employee_no AS employeeNo,
+        last_reform_date AS lastReformDate,
+        last_inseminatee AS lastInseminatee
+        FROM contract
+        ORDER BY last_reform_date DESC
+        LIMIT 1;
+    </select>
+
+
+    <select id="searchExpiringCustomers" resultType="com.semi.lynk.function.db_management.model.dto.ExpiringCustomerDTO">
+        SELECT
+        ct.contract_mng_no AS contractMngNo,
+        c.customer_name AS customerName,
+        ct.insured_name AS insuredName,
+        p.product_name AS productName,
+        ct.contract_date AS contractDate,
+        DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY) AS expiringDate,
+        CASE
+            WHEN p.product_category = 1 THEN '메리츠화재'
+            WHEN p.product_category = 2 THEN '현대해상'
+            WHEN p.product_category = 3 THEN '한화손해보험'
+            WHEN p.product_category = 4 THEN '삼성화재'
+            WHEN p.product_category = 5 THEN 'DB손해보험'
+            WHEN p.product_category = 31 THEN 'MetLife'
+            WHEN p.product_category = 32 THEN '한화생명'
+            WHEN p.product_category = 33 THEN 'SinhanLife'
+            WHEN p.product_category = 34 THEN '흥국생명'
+            WHEN p.product_category = 35 THEN '라이나생명'
+            ELSE '기타'
+        END AS insuranceCompany,
+        ct.contract_no AS contractNo,
+        d.department_name AS departmentName,
+        e.employee_name AS employeeName,
+        ct.employee_no AS employeeNo
+        FROM
+        contract ct
+        INNER JOIN customer c ON ct.customer_no = c.customer_no
+        INNER JOIN productmanage p ON p.product_no = ct.product_no
+        INNER JOIN employee e ON ct.employee_no = e.employee_no
+        INNER JOIN department d ON e.department_no = d.department_no
+        WHERE 1=1
+        <if test="customerName != null and customerName != ''">
+            AND c.customer_name LIKE CONCAT('%', #{customerName}, '%')
+        </if>
+        <if test="insuredName != null and insuredName != ''">
+            AND ct.insured_name LIKE CONCAT('%', #{insuredName}, '%')
+        </if>
+        <if test="employeeName != null and employeeName != ''">
+            AND e.employee_name LIKE CONCAT('%', #{employeeName}, '%')
+        </if>
+        <if test="month != null and month != ''">
+            AND MONTH(ct.contract_date) = #{month}
+        </if>
+    </select>
+
+
+    <select id="selectExpiringCustomersByMonth" resultType="com.semi.lynk.function.db_management.model.dto.ExpiringCustomerDTO">
+        SELECT
+        ct.contract_mng_no AS contractMngNo,
+        c.customer_name AS customerName,
+        ct.insured_name AS insuredName,
+        p.product_name AS productName,
+        ct.contract_date AS contractDate,
+        DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY) AS expiringDate,
+        CASE
+        WHEN p.product_category = 1 THEN '메리츠화재'
+        WHEN p.product_category = 2 THEN '현대해상'
+        WHEN p.product_category = 3 THEN '한화손해보험'
+        WHEN p.product_category = 4 THEN '삼성화재'
+        WHEN p.product_category = 5 THEN 'DB손해보험'
+        WHEN p.product_category = 31 THEN 'MetLife'
+        WHEN p.product_category = 32 THEN '한화생명'
+        WHEN p.product_category = 33 THEN 'SinhanLife'
+        WHEN p.product_category = 34 THEN '흥국생명'
+        WHEN p.product_category = 35 THEN '라이나생명'
+        ELSE '기타'
+        END AS insuranceCompany,
+        ct.contract_no AS contractNo,
+        d.department_name AS departmentName,
+        e.employee_name AS employeeName,
+        ct.employee_no AS employeeNo,
+        ct.contract_duration AS contractDuration
+        FROM contract ct
+        INNER JOIN customer c ON ct.customer_no = c.customer_no
+        INNER JOIN productmanage p ON p.product_no = ct.product_no
+        INNER JOIN employee e ON ct.employee_no = e.employee_no
+        INNER JOIN department d ON e.department_no = d.department_no
+        WHERE
+        YEAR(DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY)) = #{year}
+        AND MONTH(DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY)) = #{month};
+    </select>
+
+
+
+    <select id="getExpiredCustomer" resultType="com.semi.lynk.function.db_management.model.dto.ExpiringCustomerDTO">
+        SELECT
+        ct.contract_mng_no AS contractMngNo,
+        c.customer_name AS customerName,
+        ct.insured_name AS insuredName,
+        p.product_name AS productName,
+        ct.contract_date AS contractDate,
+        DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY) AS expiringDate,
+        p.product_category AS insuranceCompany,
+        ct.contract_no AS contractNo,
+        e.employee_name AS employeeName
+        FROM
+        contract ct
+        INNER JOIN customer c ON ct.customer_no = c.customer_no
+        INNER JOIN productmanage p ON p.product_no = ct.product_no
+        INNER JOIN employee e ON ct.employee_no = e.employee_no
+
+        WHERE
+
+        DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+    </select>
+
+
+
+    <select id="fetchTopSalesContract" resultType="com.semi.lynk.function.db_management.model.dto.TopSalesContractDTO">
+        SELECT
+            e.employee_name AS employeeName,
+            SUM(c.each_payment) AS totalSales,
+            COUNT(c.contract_mng_no) AS contractCount
+        FROM
+            contract c
+            JOIN
+            employee e ON c.employee_no = e.employee_no
+        WHERE
+            e.department_no IN (2, 3, 4 , 5)
+            AND c.product_no NOT IN ('m3', 'h1', 'han1', 's1', 'd1')
+        GROUP BY
+            e.employee_name
+        ORDER BY
+            totalSales DESC
+        LIMIT 10
+    </select>
+
+
+    <select id="searchInquiry" resultType="com.semi.lynk.function.db_management.model.dto.InquiryDTO">
+        SELECT
+        ct.contract_mng_no AS contractMngNo,
+        c.customer_name AS contractName,
+        ct.insured_name AS insuredName,
+        p.product_name AS productName,
+        CASE
+        WHEN p.product_category = 1 THEN '메리츠화재'
+        WHEN p.product_category = 2 THEN '현대해상'
+        WHEN p.product_category = 3 THEN '한화손해보험'
+        WHEN p.product_category = 4 THEN '삼성화재'
+        WHEN p.product_category = 5 THEN 'DB손해보험'
+        WHEN p.product_category = 31 THEN 'MetLife'
+        WHEN p.product_category = 32 THEN '한화생명'
+        WHEN p.product_category = 33 THEN 'SinhanLife'
+        WHEN p.product_category = 34 THEN '흥국생명'
+        WHEN p.product_category = 35 THEN '라이나생명'
+        ELSE '기타'
+        END AS insuranceCompany,
+        ct.contract_no AS contractNo,
+        d.department_name AS departmentName,
+        e.employee_name AS employeeName,
+        ct.employee_no AS employeeNo
+        FROM contract ct
+        INNER JOIN customer c ON ct.customer_no = c.customer_no
+        INNER JOIN productmanage p ON p.product_no = ct.product_no
+        INNER JOIN employee e ON ct.employee_no = e.employee_no
+        INNER JOIN department d ON e.department_no = d.department_no
+        WHERE
+            (#{name} IS NULL OR c.customer_name LIKE CONCAT('%',#{name},'%') OR ct.insured_name LIKE CONCAT('%', #{name} ,'%'))
+            AND(#{plannerName} IS NULL OR e.employee_name LIKE CONCAT('%', #{plannerName}, '%'));
+    </select>
+
+
+    <select id="getContractDetails" resultType="com.semi.lynk.function.db_management.model.dto.ContractDetailsDTO">
+        SELECT
+            e.employee_name AS employeeName,
+            co.payment_day AS paymentDay,
+            cu.customer_name AS customerName,
+            cu.customer_ssn AS customerSsn,
+            cu.customer_mobile AS customerMobile,
+            cu.customer_email AS customerEmail,
+            co.insured_name AS insuredName,
+            co.insured_ssn AS insuredSsn,
+            co.contract_date AS contractDate,
+            co.contract_no AS contractNo,
+            CASE
+            WHEN p.product_category = 1 THEN '메리츠화재'
+            WHEN p.product_category = 2 THEN '현대해상'
+            WHEN p.product_category = 3 THEN '한화손해보험'
+            WHEN p.product_category = 4 THEN '삼성화재'
+            WHEN p.product_category = 5 THEN 'DB손해보험'
+            WHEN p.product_category = 31 THEN 'MetLife'
+            WHEN p.product_category = 32 THEN '한화생명'
+            WHEN p.product_category = 33 THEN 'SinhanLife'
+            WHEN p.product_category = 34 THEN '흥국생명'
+            WHEN p.product_category = 35 THEN '라이나생명'
+            ELSE '기타'
+            END AS insuranceCompany,
+            p.product_name AS productName,
+            co.basic_pay_with AS basicPayWith,
+            co.contract_duration AS contractDuration,
+            co.each_payment AS eachPayment,
+            co.payment_term AS paymentTerm,
+            co.other_matters AS otherMatters
+        FROM
+            contract co
+            INNER JOIN customer cu ON co.customer_no = cu.customer_no
+            INNER JOIN productmanage p ON p.product_no = co.product_no
+            INNER JOIN employee e ON co.employee_no = e.employee_no
+        WHERE
+            co.contract_no = #{contractNo};
+    </select>
+
+
+
+
+
+</mapper>

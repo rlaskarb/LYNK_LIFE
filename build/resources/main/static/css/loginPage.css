@@ -1,0 +1,111 @@
+body {
+    background-color: #2D2D2D;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+}
+
+.inputSection {
+    position: absolute;
+    width: 600px;
+    height: 450px;
+    background-color: #F8F8F8;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 75px;
+}
+
+.logo {
+    text-align: center;
+    margin-top: 10%;
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.logo img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: -10px;
+}
+
+.PwdHelpText p, pre {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.PwdHelpText p {
+    opacity: 80%;
+    font-weight: bolder;
+}
+
+.PwdHelpText pre {
+    opacity: 50%;
+    font-weight: lighter;
+    font-size: 12px;
+    margin-bottom: -10px;
+}
+
+.inputDiv {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.inputDiv input {
+    margin-top: 5px;
+    height: 15px;
+    width: 250px;
+    padding: 10px;
+    padding-left: 20px;
+    font-size: 14px;
+    border: 1px solid #2D2D2D;
+    background-color: #E7EFF5;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.inputDiv button {
+    margin-top: 5px;
+    height: 35px;
+    width: 282px;
+    font-size: 16px;
+    border: 1px solid #204708;
+    background-color: #A5CB91;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.loginAttr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 250px;
+    margin: 2px auto;
+    font-size: 10px;
+}
+
+.loginIdSave {
+    display: flex;
+    align-items: center;
+}
+
+#save_id {
+    width: 10px;
+    height: 10px;
+}
+
+.loginAttr input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.passwordHelp a {
+    text-decoration: none;
+    color: black;
+}
+
+.passwordHelp a:hover {
+    color: #6D6D6D;
+}

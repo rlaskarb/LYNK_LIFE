@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.notice_board.model.dao.NoticeMapper">
+    <resultMap id="noticeResultMap" type="com.semi.lynk.function.notice_board.model.dto.NoticeDTO">
+        <id property="noticeNo" column="notice_no"/>
+        <result property="noticeDate" column="notice_date"/>
+        <result property="noticeVote" column="notice_vote"/>
+        <result property="noticeTitle" column="notice_title"/>
+        <result property="noticeContent" column="notice_content"/>
+        <result property="noticeHide" column="notice_hide"/>
+        <result property="viewerCount" column="viewer_count"/>
+        <result property="employeeNo" column="employee_no"/>
+        <result property="noticePreNo" column="notice_preno"/>
+        <result property="employeeName" column="employee_name"/>
+    </resultMap>
+
+    <insert id="insertNotice" parameterType="com.semi.lynk.function.notice_board.model.dto.NoticeDTO">
+        INSERT INTO notice (notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, notice_preno)
+        VALUES (#{noticeDate}, #{noticeVote}, #{noticeTitle}, #{noticeContent}, #{noticeHide}, #{viewerCount}, #{employeeNo}, #{noticePreNo})
+    </insert>
+
+    <select id="getAllNotices" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        notice_hide != 2
+        ORDER BY
+        notice_no DESC
+        limit #{pageNo}, #{count}
+    </select>
+
+    <select id="getPinedNotices" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        notice_hide = 2
+        ORDER BY
+        notice_no DESC
+        limit #{pageNo}, #{count}
+    </select>
+
+    <select id="getNormalNotices" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        notice_hide = 0
+        ORDER BY
+        notice_no DESC
+        limit #{pageNo}, #{count}
+    </select>
+
+    <select id="getPinedCount" parameterType="int">
+        SELECT COUNT(*)
+        FROM notice
+        WHERE notice_hide = 2
+    </select>
+
+    <select id="getNormalCount" parameterType="int">
+        SELECT COUNT(*)
+        FROM notice
+        WHERE notice_hide = 0
+    </select>
+
+    <select id="getAllCount" parameterType="int">
+        SELECT COUNT(*)
+        FROM notice
+    </select>
+
+    <select id="selectNoticeByNNO" parameterType="Long" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_preno, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name
+        FROM
+        notice join employee using(employee_no)
+        WHERE notice_no = #{noticeNo}
+    </select>
+
+    <update id="updateNotice" parameterType="Long">
+        UPDATE notice set
+        notice_hide = 1
+        WHERE notice_no = #{noticeNo}
+    </update>
+
+    <delete id="deleteNotice" parameterType="Long">
+        DELETE FROM notice WHERE notice_no = #{noticeNo}
+    </delete>
+
+    <update id="updateViewCnt">
+        update notice set
+        viewer_count = viewer_count +1
+        where notice_no = #{noticeNo}
+    </update>
+
+    <select id="getSearchNoCount" parameterType="int">
+        SELECT COUNT(*)
+        FROM notice
+        WHERE (notice_hide != 1) AND ( notice_no = #{keyword})
+    </select>
+
+    <select id="searchByNoticeNo" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        notice_hide != 1 AND notice_no = #{keyword}
+        ORDER BY
+        notice_no DESC
+        limit #{page}, #{count}
+    </select>
+
+    <select id="getSearchTitleCount" parameterType="String">
+        SELECT COUNT(*)
+        FROM notice
+        WHERE (notice_hide != 1) AND (notice_title LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+
+    <select id="searchByNoticeTitle" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        (notice_hide != 1) AND (notice_title LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY
+        notice_no DESC
+        limit #{page}, #{count}
+    </select>
+
+    <select id="getSearchEmpCount" parameterType="String">
+        SELECT COUNT(*)
+        FROM notice join employee using(employee_no)
+        WHERE (notice_hide != 1) AND (employee_name LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+
+    <select id="searchByNoticeEmp" resultMap="noticeResultMap">
+        SELECT
+        notice_no, notice_date, notice_vote, notice_title, notice_content, notice_hide, viewer_count, employee_no, employee_name, notice_preno
+        FROM
+        notice join employee using(employee_no)
+        WHERE
+        (notice_hide != 1) AND (employee_name LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY
+        notice_no DESC
+        limit #{page}, #{count}
+    </select>
+
+
+
+
+</mapper>

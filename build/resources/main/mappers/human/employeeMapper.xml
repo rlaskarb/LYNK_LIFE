@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.human.model.dao.EmployeeMapper">
+
+    <resultMap id="listResultMap" type="com.semi.lynk.function.human.model.dto.EmployeeDTO">
+        <id property="id" column="employee_No"/>
+        <result property="pw" column="password"/>
+        <result property="name" column="employee_name"/>
+        <result property="email" column="email"/>
+        <result property="image" column="image"/>
+        <result property="failCount" column="loginFailcount"/>
+    </resultMap>
+
+    <select id="employeeFullList" resultMap="listResultMap">
+        select
+            *
+        from
+            employee
+    </select>
+
+    <resultMap id="joinResultMap" type="com.semi.lynk.function.human.model.dto.EmpAndDepDTO">
+        <id property="id" column="employee_no"/>
+        <result property="name" column="employee_name"/>
+        <result property="email" column="email"/>
+        <result property="depNo" column="department_no"/>
+        <result property="image" column="image"/>
+                <association property="departmentDTO" javaType="com.semi.lynk.function.human.model.dto.DepartmentDTO">
+                    <id property="depNo" column="department_no"/>
+                    <result property="depName" column="department_name"/>
+                </association>
+                <association property="humanDTO" javaType="com.semi.lynk.function.human.model.dto.HumanDTO">
+                    <id property="id" column="employee_no"/>
+                    <result property="position" column="position"/>
+                </association>
+    </resultMap>
+
+    <!-- 인사 등록 필요한 애들 보여주는 애 -->
+    <select id="joinListResult" resultMap="joinResultMap">
+<!--    select-->
+<!--         a.employee_no-->
+<!--        ,a.employee_name-->
+<!--        ,b.department_name-->
+<!--        ,c.position-->
+<!--        ,a.email-->
+<!--    from-->
+<!--        employee a-->
+<!--        left join department b on (a.department_no = b.department_no)-->
+<!--        left join human_resource c on (a.employee_no = c.employee_no)-->
+<!--    where-->
+<!--        c.position is null-->
+<!--        and-->
+<!--        c.nation is null-->
+<!--    order by-->
+<!--        a.employee_no-->
+
+        <!-- 이렇게 하면 휴먼쪽에-->
+<!--        select-->
+<!--            a.employee_no-->
+<!--            ,a.employee_name-->
+<!--            ,b.department_name-->
+<!--            ,a.email-->
+<!--        from-->
+<!--          employee a join department b on (a.department_no = b.department_no)-->
+<!--        order by-->
+<!--             a.employee_no;-->
+
+        <!-- human_resource에 employee_no와 같은 정보가 있는지 걸러줘야 됨.
+         그쪽에 데이터가 있으면 등록할 때 에러가 나니까! -->
+        SELECT
+            a.employee_no,
+            a.employee_name,
+            b.department_name,
+            a.email,
+            a.image
+        FROM
+            employee a
+            JOIN
+            department b ON (a.department_no = b.department_no)
+        WHERE
+             a.employee_no NOT IN (SELECT employee_no FROM human_resource)
+        ORDER BY
+          a.employee_no
+    </select>
+
+    <!-- 인사 등록 --> <!-- 인사 등록(insert)할라면 human_resource 쪽에 truncate로 데이터 다 날려야 한다. -->
+    <insert id="registMapperhum" parameterType="com.semi.lynk.function.human.model.dto.RegistHumDTO">
+        insert into human_resource
+        (employee_no, position , employeement_status, address, nation, mobile_no, join_date)
+        values
+        (#{id}, #{position}, #{employeementStatus}, #{address}, #{nation}, #{phoneNumber}, #{joinDate})
+    </insert>
+
+    <resultMap id="lookUpResultMap" type="com.semi.lynk.function.human.model.dto.LookUpDTO">
+        <id property="id" column="employee_no"/>
+        <result property="name" column="employee_name"/>
+        <result property="image" column="image"/>
+        <association property="humanDTO" javaType="com.semi.lynk.function.human.model.dto.HumanDTO">
+            <id property="id" column="employee_no"/>
+            <result property="position" column="position"/>
+            <result property="employeementStatus" column="employeement_status"/>
+            <result property="phoneNumber" column="mobile_no"/>
+            <result property="ssn" column="ssn"/>
+            <result property="joinDate" column="join_date"/> <!-- 24-12-23 추가, 상세조회 클릭 했을 때만 나오게-->
+        </association>
+        <association property="departmentDTO" javaType="com.semi.lynk.function.human.model.dto.DepartmentDTO">
+            <id property="depNo" column="department_no"/>
+            <result property="depName" column="department_name"/>
+        </association>
+    </resultMap>
+
+    <!-- 부서명 , 이름 , 고용 구분으로 조회 시 tbody에 추가될 애들 -->
+    <select id="lookUpMapper" resultMap="lookUpResultMap">
+        select
+             a.employee_no
+            ,a.employee_name
+            ,a.image <!-- 24-12-23 추가, 상세조회 클릭 했을 때만 나오게-->
+            ,c.department_name
+            ,b.position
+            ,b.employeement_status
+            ,b.mobile_no
+            ,b.join_date <!-- 24-12-23 추가, 상세조회 클릭 했을 때만 나오게-->
+        from
+            employee a join human_resource b
+                              on (a.employee_no = b.employee_no)
+            join department c on (a.department_no = c.department_no)
+        order by
+            a.employee_no
+    </select>
+
+    <!-- 인사 정보 수정 구문 --> <!-- set에 department_name을 넣으면 다 바뀜. -->
+    <update id="modifyEmployee" parameterType="com.semi.lynk.function.human.model.dto.ModifyDTO">
+        update employee a join human_resource b on
+                (a.employee_no = b.employee_no)
+        set
+             a.employee_name = #{name}
+            ,a.department_no = #{depNo}
+            ,b.position = #{humanDTO.position}
+            ,b.employeement_status = #{humanDTO.employeementStatus}
+            ,b.mobile_no = #{humanDTO.phoneNumber}
+            ,b.join_date = #{humanDTO.joinDate} <!-- 24-12-23 추가, 상세조회 클릭 했을 때만 나오게-->
+        where
+            a.employee_no = #{id} and b.employee_no = #{id}
+        <!-- and b.employee_no도 추가해야 전체 다 안 바뀜!! -->
+    </update>
+
+</mapper>

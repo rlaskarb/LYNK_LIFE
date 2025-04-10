@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>인사 등록</title>
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/registPage.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../../../static/css/registPage.css">
+</head>
+<body>
+
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}" class="header-class"></header>
+
+    <section class="main-content">
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/">인사 관리</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/employee/regist">인사 등록</a>
+        </div>
+
+        <div class="mainContainer">
+            <article>
+            <div class="table-container">
+                <h2 class="table-header">인사 등록이 필요한 직원 정보</h2>
+                <div class="table-wrapper">
+                    <table class="styled-table">
+                        <thead style="top: 0; position: sticky;">
+                        <tr>
+                            <th style="text-align: center">사진</th>
+                            <th>사번</th>
+                            <th style="text-align: center">이름</th>
+                            <th style="text-align: center">부서</th>
+                            <!--                        <th>직책</th>-->
+                            <th>이메일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+<!--                        data 어쩌고는 클릭 했을 때 오른쪽 등록 란으로 이동하는 이벤트용 데이터 -->
+                        <tr th:each="abc : ${list}" class="clickable-row"
+                            th:data-picture="@{${session.image}}"
+                            th:data-id="${abc.id}"
+                            th:data-name="${abc.name}"
+                            th:data-department="${abc.departmentDTO.depName}"
+                            th:data-position="${abc.humanDTO.position}"
+                            th:data-email="${abc.email}">
+<!--                            <td th:text="${abc.picture}"></td>-->
+                            <!-- 사진 셀 -->
+                            <td> <!--  인사 등록 필요한 애들-->
+                                <img th:src="@{${abc.image != null ? abc.image : '/images/default.png'}}" alt="사진" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                            </td>
+                            <td th:text="${abc.id}"></td>
+                            <td th:text="${abc.name}"></td>
+                            <td th:text="${abc.departmentDTO.depName}"></td>
+                            <!--                        <td th:text="${abc.humanDTO.position}"></td>-->
+                            <td th:text="${abc.email}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </article>
+<!--            <img "@{${session.image}}" alt="No Image" id="profile">-->
+<!--            클릭 했을 때 옆으로 넘어 가는 애 -->
+            <article class=form-container>
+                <form action="/employee/regist" method="post" onsubmit="combineEmail(); return true;" class="form">
+                <div class="regist-div-class">
+                    <!-- 상단 제목 -->
+                    <div class="header">인사 정보 등록</div>
+                    <button type="button" class="cancle-button">취소</button> <!-- 취소 버튼 -->
+
+                    <!-- 사진 및 입력 필드 -->
+                    <div class="content-wrapper">
+                        <!-- 사진 업로드 영역 -->
+                        <div class="photo" id="formPhoto">사 진</div> <!-- 사진 받아와서 연결 -->
+
+                        <!-- 입력 필드 -->
+                        <div class="field-container">
+                            <div class="field-group">
+                                <label>사 번</label> <!-- 사번 받아와서 연결 -->
+                                <input type="number" name="id" id="formId" >
+                            </div>
+
+                            <div class="field-group">
+                                <label>이 름</label> <!-- 이름 받아와서 연결 -->
+                                <input type="text" name="name" id="formName" placeholder="홍길동">
+                            </div>
+
+
+                            <div class="field-group">
+                                <label>부 서</label> <!-- 부서 받아와서 연결 -->
+                                <input type="text" name="text" id="formDepartment" placeholder="인사팀">
+                            </div>
+
+                            <div class="field-group">
+                                <label>직 책</label>
+                                <select name="position" id="position">
+                                    <option value="인턴">인턴</option>
+                                    <option value="사원">사원</option>
+                                    <option value="대리">대리</option>
+                                    <option value="과장">과장</option>
+                                    <option value="차장">차장</option>
+                                    <option value="부장">부장</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label>이메일</label> <!-- 이메일 받아와서 연결 -->
+                                <input type="email" name="email" id="formEmail" placeholder="gyunam@naver.com">
+                            </div>
+
+                            <div class="field-group">
+                                <label>고용 여부</label>
+                                <select name="employeementStatus">
+                                    <option value="계약직">계약직</option>
+                                    <option value="정규직">정규직</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label>주 소</label>
+                                <input type="text" name="address" placeholder="서울특별시 강남구 도봉구">
+                            </div>
+
+                            <!-- 국적 필드 -->
+                            <div class="field-group">
+                                <label>국 적</label>
+                                <input type="text" name="nation" placeholder="대한민국">
+                            </div>
+
+                            <div class="field-group">
+                                <label>대표 전화</label>
+                                <input type="tel" name="phoneNumber" placeholder="대표 전화">
+                            </div>
+
+                            <div class="field-group">
+                                <label>입사 일자</label>
+                                <input type="date" name="joinDate" placeholder="입사 일자">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 등록 버튼 -->
+                    <button type="submit" class="submit-button">등록</button>
+                </div>
+            </form>
+            </article>
+        </div>
+
+
+        <div id="successMessage" style="display: none;" th:text="${successMessage ?: ''}"></div>
+        <!-- 모랄 메씨지 -->
+        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">알림</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        모달 메시지가 여기에 표시됩니다.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+
+</div>
+
+<script th:src="@{/js/regist.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/calendar.js}"></script>
+<!-- ① Popper.js 라이브러리 - 툴팁 , 팝오버 , 드롭다운 관리 -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<!-- ② Popper.js를 필요로 함 - 자바스크립트 파일 로드 - UI 구성 요소 쉽게 만들어줌 - 드롭다운 , 모달 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

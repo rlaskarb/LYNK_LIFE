@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nav</title>
+    <style>
+    </style>
+</head>
+<body>
+<nav th:fragment="navFragment" class="nav-class">
+    <!-- 로고 영역 -->
+    <div class="nav-div-class">
+        <a class="nav-link" href="/">LYNK</a>
+    </div>
+
+    <!-- 메뉴바 영역 -->
+    <div class="menuContainer">
+        <div class="mainMenuContainer">
+            <h6 style="color: white">Menu</h6>
+            <li class="home">
+                <a href="/">
+                    <span class="arrow">></span>홈
+                </a>
+            </li>
+            <li class="board">
+                <a href="/notice/list">
+                    <span class="arrow">></span>공지사항
+                </a>
+            </li>
+            <li class="humanMenu">
+                <a href="#">
+                    <span class="arrow">></span>인사관리
+                </a>
+                <ul class="subMenu">
+                    <li th:if="${session.roleAdmin == 1}"><a href="/employee/inform">인사정보</a></li> <!-- session으로 받아야 다른 페이지 넘어 가도 접근할 수 있음 -->
+                    <li th:if="${session.roleAdmin == 1}"><a href="/employee/regist">인사등록</a></li> <!-- session으로 받아야 다른 페이지 넘어 가도 접근할 수 있음 -->
+                    <li><a href="/employee/attendance">근태관리</a></li>
+                </ul>
+            </li>
+
+            <li class="applovalMenu">
+                <a href="#">
+                    <span class="arrow">></span>전자결재
+                </a>
+                <ul class="subMenu">
+                    <li><a href="/approval/do/approval">결재하기</a></li>
+                    <li><a href="/approval/fin/approval">결재 완료</a></li>
+                    <li><a href="/approval/credraft">기안하기</a></li>
+                    <li><a href="/approval/list/readydraft">준비중 기안</a></li>
+                    <li><a href="/approval/list/ondraft">진행중 기안</a></li>
+                    <li><a href="/approval/list/findraft">완료된 기안</a></li>
+                    <li><a href="/approval/list/dindraft">반려된 기안</a></li>
+                </ul>
+            </li>
+            <li class="dbMenu">
+                <a href="#">
+                    <span class="arrow">></span>DB 관리
+                </a>
+                <ul class="subMenu">
+                    <li><a href="/db/customer">고객 등록</a></li>
+                    <li><a href="/db/contract">계약 등록</a></li>
+                    <li><a href="/db/list">상품 등록</a></li>
+                </ul>
+            </li>
+            <li class="salesMenu">
+                <a href="#">
+                    <span class="arrow">></span>계약관리
+                </a>
+                <ul class="subMenu">
+                    <li><a href="/db/inquiry">계약 조회</a></li>
+                    <li><a href="/db/expiringcustomer">만기고객 도래 조회</a></li>
+                </ul>
+            </li>
+        </div>
+    </div>
+
+    <!-- 사용자 영역 -->
+    <div class="userContainer">
+        <div class="userDetail hidden">
+            <img src="/images/logout.png" alt="logout" data-value="logout" id="logoutImage">
+            <img th:src="@{${session.image != null ? session.image : '/images/default.png'}}" id="profile">
+            <a href="/management/activeAccountList">관리</a><br>
+            <span th:text="${session.empName}" style="font-weight: 800; font-size: 20px; color: black">Employee Name</span><br>
+            <span th:text="${session.deptName}">부서명</span>
+            <span> / </span>
+            <span th:text="${session.position}">직급</span><br> <!-- 임시 영역 -->
+            <div class="userButton">
+                <button type="button" class="work" id="workOnButton">출근</button>
+                <button id="outsideOnButton" class="work-out" style="display: inline-block">외근</button>
+                <button id="outsideOffButton" class="work-end" style="display: none;">종료</button>
+                <button class="leave" id="workOffButton">퇴근</button>
+            </div>
+        </div>
+        <div class="userOverview" onclick="togglePopup()">
+            <img th:src="@{${session.image != null ? session.image : '/images/default.png'}}" alt="No Image" style="width: 40px; height: 40px; border-radius: 50%; background-color: white">
+            <span th:text="${session.empName}">Employee Name</span>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

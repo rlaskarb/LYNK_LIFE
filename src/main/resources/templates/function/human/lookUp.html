@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>인사 정보 조회</title>
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/lookUp.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}" class="header-class"></header>
+
+    <section class="main-content">
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/">인사 관리</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/employee/inform">인사 정보</a>
+        </div>
+
+        <article class="lookupSelect-class">
+<!--            <label>사번 / 이름</label>-->
+            <select id="lookupSelect" name="lookupSelect" class="form-select">
+                <option value="부서명">부서명</option>
+                <option value="이름">이름</option>
+                <option value="고용 구분">고용 구분</option>
+            </select>
+            <input type="text" id="lookupInput" placeholder="검색어를 입력해 주세요." class="form-control">
+            <button class="select-button" id="select-button-id">조 회</button>
+        </article>
+
+        <div class="subHeader2-class">
+            <a class="subHeaderLink-class" href="/employee/inform">인사 기본 정보</a>
+        </div>
+
+<!--       인사 기본 정보에 나오는 애들 -->
+        <article class="account-list">
+            <div class="list-section">
+                <table class="activeAccountListHeader">
+                    <tr class="fix-th">
+                        <th style="width: 13%">사 번</th>
+                        <th style="width: 13%">이 름</th>
+                        <th style="width: 13%">부서명</th>
+                        <th style="width: 10%">직 책</th>
+                        <th style="width: 16%">고용 구분</th>
+                        <th style="width: 16%">전화 번호</th>
+                    </tr>
+                </table>
+                <div class="table-body-container" style="max-height: 400px; overflow-y: auto;">
+                    <table class="activeAccountListBody">
+                        <colgroup>
+                            <col style="width: 203px">
+                            <col style="width: 203.5px">
+                            <col style="width: 203px">
+                            <col style="width: 156px">
+                            <col style="width: 251px">
+                            <col style="width: 249.5px">
+                            <col>
+                        </colgroup>
+                        <tr>
+                            <tbody id="employee-table-body" aria-disabled="true">
+                            <!-- fetch로 가져온 애 여기 추가됨!! -->
+                            </tbody>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </article>
+
+        <!-- 클릭 했을 때 상세 정보 나오는 애 -->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document"> <!-- modal-lg 클래스 추가 -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">직원 정보 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body modal-layout"> <!-- Flexbox를 위한 클래스 추가 -->
+                        <!-- 왼쪽 이미지 영역 -->
+                        <div class="modal-left">
+<!--                            <input type="image" id="editImage" style="width: 200px; height: 300px;">-->
+                            <img alt="No Image" id="editImage"
+                            style="width: 250px; height: 250px;">
+
+<!--                            <img src="/static/images/dog-8262506_640.jpg" style="width: 150px; height: 300px;">-->
+<!--나중에 static 하위에 이미지 박아 넣으려면 이런 식으로 <img src="/images" +_  style="width: 150px; height: 200px;">-->
+                        </div>
+
+                        <!-- 오른쪽 입력 폼 영역 -->
+                        <div class="modal-right">
+
+                            <label for="editId">사 번</label>
+                            <input type="text" id="editId" disabled class="form-control"><br>
+                            <label for="editName">이 름</label>
+                            <input type="text" id="editName" class="form-control" disabled><br>
+
+                            <label for="editDepNo">부서명</label>
+                            <select id="editDepNo" class="form-control" disabled>
+                                <option value="1">인사팀</option>
+                                <option value="2">영업1팀</option>
+                                <option value="3">영업2팀</option>
+                                <option value="4">영업3팀</option>
+                                <option value="5">총무팀</option>
+                                <option value="6">시설팀</option>
+                            </select><br>
+
+                            <label for="editPosition">직 책</label>
+                            <select id="editPosition" class="form-control" disabled>
+                                <option value="인턴">인턴</option>
+                                <option value="사원">사원</option>
+                                <option value="대리">대리</option>
+                                <option value="과장">과장</option>
+                                <option value="차장">차장</option>
+                                <option value="부장">부장</option>
+                            </select><br>
+
+                            <label for="editStatus">고용 구분</label>
+                            <select id="editStatus" class="form-control" disabled>
+                                <option value="계약직">계약직</option>
+                                <option value="정규직">정규직</option>
+                            </select><br>
+
+                            <label for="editPhone">전화 번호</label>
+                            <input type="text" id="editPhone" class="form-control" disabled><br>
+
+                            <label for="editJoinDate">입사 일자</label>
+                            <input type="date" id="editJoinDate" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="enableEditBtn" class="btn btn-warning">수정</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button id="saveChanges" type="button" class="btn btn-primary">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+        <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+        <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+
+</div>
+
+<script th:src="@{/js/lookUp.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/calendar.js}"></script>
+<!-- ① Popper.js 라이브러리 - 툴팁 , 팝오버 , 드롭다운 관리 -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<!-- ② Popper.js를 필요로 함 - 자바스크립트 파일 로드 - UI 구성 요소 쉽게 만들어줌 - 드롭다운 , 모달 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

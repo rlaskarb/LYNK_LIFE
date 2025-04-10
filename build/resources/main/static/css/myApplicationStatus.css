@@ -1,0 +1,22 @@
+/* 테이블 행(tr) 배경색 */
+.status-waiting td {
+    background-color: #d9edf7; /* 파랑 - 대기 */
+    font-weight: bold;
+}
+
+.status-approved td {
+    background-color: #dff0d8; /* 초록 - 승인 */
+    font-weight: bold;
+}
+
+.status-rejected td {
+    background-color: #f2dede; /* 빨강 - 반려 */
+    font-weight: bold;
+}
+
+/* 모달창 크기 조정 및 레이아웃 변경 */
+.modal-lg2 {
+    max-width: 300px; /* 다른 애 커서 얘는 줄임*/
+    display: flex;
+    flex-direction: column;
+}

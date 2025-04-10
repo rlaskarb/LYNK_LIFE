@@ -1,0 +1,395 @@
+* {
+    box-sizing: border-box; /* 모든 요소의 박스 모델을 border-box로 설정 */
+}
+
+body {
+    margin: 0; /* 기본 여백 제거 */
+    height: 100vh; /* 전체 화면 높이 설정 */
+    width: 100vw; /* 전체 화면 너비 설정 */
+    display: flex; /* flexbox 사용 */
+}
+
+.nav-class {
+    background-color: #2D2D2D; /* 왼쪽 영역 배경색 */
+    width: 280px;
+    height: 100%; /* 전체 높이 */
+    padding: 20px;
+    position: relative;
+}
+
+.right-container {
+    display: flex; /* 오른쪽 컨테이너를 flexbox로 설정 */
+    flex-direction: column; /* 세로 방향으로 배치 */
+    flex: 1;
+}
+
+.header-class {
+    background-color: #BBE8A7;
+    width: 100%;
+    align-items: center; /* 세로축 중앙 정렬 */
+    padding: 0 20px; /* 좌우 여백 */
+    gap: 10px;
+    margin: 0;
+}
+
+.managedHeader {
+    height: 50px;
+}
+
+.subHeader-class {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center; /* 세로축 중앙 정렬 */
+    font-weight: 900;
+    font-size: 18px;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.main-content {
+    flex: 1; /* 남은 공간을 모두 차지 */
+    background-color: white; /* 메인 콘텐츠 배경색 */
+    overflow: hidden; /* 스크롤 생김 방지 */
+}
+
+.footer-class {
+    background-color: #BBE8A7; /* 푸터 배경색 */
+    height: 50px; /* 푸터 높이 */
+    width: 100%; /* 전체 너비 */
+    position: relative;
+    bottom: 0;
+}
+
+.nav-div-class {
+    color: #BBE8A7;
+    margin:10px;
+    font-size: 30px;
+    margin-bottom: 7rem;
+    font-weight: bold;
+}
+
+.nav-link { /* LYNK 홈 버튼 눌렀을 때 홈으로 돌아오게 */
+    color: #BBE8A7;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    display: block; /* 블록 요소로 만들어 클릭 영역 확대 */
+}
+
+/* 기본 화살표 스타일 */
+.arrow {
+    margin-right: 15px;
+    transition: transform 0.3s ease; /* 부드러운 회전 효과 */
+}
+
+/* 드롭다운이 열릴 때 화살표 회전 */
+.btn-group.show .arrow {
+    transform: rotate(90deg); /* 90도 회전 */
+}
+
+/* 드롭다운 링크 스타일 */
+.dropdown-toggle {
+    text-decoration: none;
+    color: #F4F4F4;
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 화살표 제거 (기본 스타일 초기화) */
+.btn-group .dropdown-toggle::after {
+    display: none;
+}
+
+/*************************************************************/
+/* 윤이정 추가 CSS 영역 */
+.menuContainer{
+    font-weight: bold;
+    text-align: left;
+    color: #F4F4F4;
+    line-height: 2; /* line 간격 */
+    margin-left: 10px;
+}
+
+.menuContainer ul {
+    padding: 0;
+    margin: 0;
+}
+
+.menuContainer li {
+    list-style: none;
+}
+
+.menuContainer a {
+    text-decoration: none;
+    color: #F4F4F4;
+}
+
+.menuContainer ul li a {
+    cursor: pointer;
+}
+
+.menuContainer h6 {
+    color: white;
+    opacity: 40%;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.mainMenuContainer {
+    position: relative;
+    top: 4rem;
+}
+
+.menuList {
+    overflow: hidden;
+}
+
+.subMenu {
+    list-style: none;
+    height: 0;
+    overflow: hidden;
+    font-size: 12px;
+    transition: height 0.3s ease;
+}
+
+.subMenu li {
+    margin-left: 32px;
+}
+
+.header-class {
+    /*flex-wrap: wrap;*/
+}
+
+#calendar-header {
+    font-weight: 900;
+    margin: 7px 0 7px -5px;
+    font-size: 20px;
+}
+
+#calendar-days button {
+    width: 40px; /* 버튼 가로 크기 */
+    height: 55px; /* 버튼 세로 크기 */
+    font-size: 12px !important;
+    font-weight: 700;
+    border: none;
+    background-color: rgba(45, 45, 45, 0.1);
+    border-radius: 15px !important;
+    text-align: center;
+    overflow: hidden !important;
+    margin-right: 1px;
+}
+
+#calendar-days button.weekend {
+    color: #d81b60;
+}
+
+#calender-notify {
+    height: 15px;
+}
+
+.subHeaderLink-class { /* header 밑에 소제목? css 임*/
+    color: black;
+    font-size: 24px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+    display: block; /* 블록 요소로 만들어 클릭 영역 확대 */
+}
+.subHeader-class {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center; /* 세로축 중앙 정렬 */
+    font-weight: 900;
+    font-size: 18px;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.userContainer {
+    position: absolute;
+    bottom: 2rem;
+    width: 100%;
+    text-align: center;
+    margin-left: -20px;
+    color: white;
+}
+
+.userOverview {
+    cursor: pointer;
+}
+
+.userDetail.hidden {
+    display: none;
+}
+
+.userDetail {
+    display: block;
+    z-index: 10;
+    align-content: center;
+    justify-content: center;
+    color: #2D2D2D;
+    position: absolute;
+    bottom: 2rem;
+    width: 80%;
+    height: 250px;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 30px;
+    border: 3px solid #A5CB91;
+    position: relative;
+}
+
+.userDetail:after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 20px solid white;
+    z-index: 1;
+}
+
+.userDetail:before {
+    content: '';
+    position: absolute;
+    bottom: -23px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 23px solid #A5CB91;
+    z-index: 0;
+}
+
+.userDetail > span {
+    font-size: 12px;
+    opacity: 80%;
+}
+
+#profile {
+    margin: 10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #A5CB91;
+    text-align: center;
+}
+
+.userDetail span {
+    margin: 5px 0;
+}
+
+.userDetail button {
+    top: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.userDetail > img[data-value="logout"] {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    /*border: 1px solid #A5CB91;*/
+    top: 13px;
+    left: 13px;
+    opacity: 50%;
+}
+
+.userDetail a {
+    position: absolute;
+    top: 13px;
+    right: 10px; /* 팝업의 오른쪽 모서리에 배치 */
+    font-size: 12px;
+    opacity: 60%;
+    text-decoration: none;
+    color: #2D2D2D;
+}
+
+.userButton button {
+    width: 45px;
+    height: 45px;
+    font-size: 14px;
+    margin: 10px 4px;
+    border-radius: 15px;
+    font-weight: bolder;
+}
+
+.userButton > .work {
+    background-color: #A5CB91;
+}
+
+.userButton > .work-out, .userButton > .work-end {
+    background-color: #BC91CB;
+}
+
+.userButton > .work-end {
+    left: 83px;
+    top: 167px;
+}
+
+.userButton > .leave {
+    background-color: #BEBEBE;
+}
+
+img[data-value="logout"] {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+img[data-value="logout"]:hover {
+    transform: scale(1.1);
+}
+/*************************************************************/
+/* section - article 영역 */
+.mainPageSection {
+    display: grid;
+    grid-template-columns: 1.3fr 1.7fr;
+    grid-template-rows: 14em 30em;
+    grid-template-areas:
+        "box1 box2"
+        "box4 box4";
+    gap: 20px;
+    margin: 40px;
+    padding-right: 0;
+    margin-right: 0;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    width: 101%;
+}
+
+.mainPageSection article {
+    padding: 15px;
+    background-color: #f1f1f1;
+}
+
+.box1 { grid-area: box1; }
+.box2 { grid-area: box2; }
+.box3 { grid-area: box3; }
+.box4 { grid-area: box4; }
+
+.articleName {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.custom-hr {
+    border: 0;
+    border-top: 2px solid #111;
+    width: 100%;
+    margin: 2px 0 5px 0;
+}
+/*************************************************************/

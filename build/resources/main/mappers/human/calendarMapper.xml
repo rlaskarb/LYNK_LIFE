@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.human.model.dao.CalendarMapper">
+
+    <resultMap id="selectResultMap" type="com.semi.lynk.function.human.model.calendar.CalendarDTO">
+<!--        <id property="id" column="employee_no"/>-->
+<!--        <result property="title" column="id"/>-->
+<!--        <result property="approveTime" column="approve_completion_time"/>-->
+<!--        <result property="draftDate" column="draft_date"/>-->
+<!--        <result property="draftTime" column="draft_completion_time"/>-->
+        <association property="humanDTO" javaType="com.semi.lynk.function.human.model.dto.HumanDTO">
+<!--            <id property="id" column="employee_no"/>-->
+            <result property="totalLeave" column="totalLeave"/>
+            <result property="usedLeave" column="usedLeave"/>
+            <result property="position" column="position"/>
+        </association>
+        <association property="commuteDTO" javaType="com.semi.lynk.function.human.model.calendar.CommuteDTO">
+<!--            <id property="id" column="employee_no"/>-->
+            <result property="workDate" column="work_date"/>
+            <result property="workOn" column="work_on"/>
+            <result property="workOff" column="work_off"/>
+            <result property="workOnOutside" column="work_on_outside"/>
+            <result property="workOffOutside" column="work_off_outside"/>
+        </association>
+        <association property="scheduleDTO" javaType="com.semi.lynk.function.human.model.calendar.ScheduleDTO">
+<!--            <id property="id" column="employee_no"/>-->
+            <result property="scheduleStartDate" column="schedule_start_date"/>
+            <result property="scheduleEndDate" column="schedule_end_date"/>
+            <result property="scheduleType" column="schedule_type"/>
+            <result property="scheduleNote" column="schedule_note"/>
+        </association>
+        <association property="employeeDTO" javaType="com.semi.lynk.function.human.model.dto.EmployeeDTO">
+            <id property="employeeNo" column="employee_no"/>
+            <result property="name" column="employee_name"/>
+        </association>
+        <association property="dayOffDTO" javaType="com.semi.lynk.function.human.model.calendar.DayOffDTO">
+<!--            <id property="id" column="employee_no"/>-->
+            <result property="leaveStartDate" column="leave_start_date"/>
+            <result property="leaveEndDate" column="leave_end_date"/>
+            <result property="leaveType" column="leave_type"/>
+            <result property="leaveMemo" column="leave_memo"/>
+        </association>
+        <association property="departmentDTO" javaType="com.semi.lynk.function.human.model.dto.DepartmentDTO">
+            <result property="depName" column="department_name"/>
+        </association>
+        <association property="draftshDTO" javaType="com.semi.lynk.function.human.model.calendar.DraftshDTO">
+            <id property="draftNo" column="draft_no"/>
+            <result property="draftTitle" column="draft_title"/>
+            <result property="draftDate" column="draft_date"/>
+            <result property="draftState" column="draft_state"/>
+            <result property="draftCurrentStep" column="draft_current_step"/>
+            <result property="draftLastStep" column="draft_last_step"/>
+            <result property="draftCompletionTime" column="draft_completion_time"/>
+            <result property="draftMemo" column="draft_memo"/>
+        </association>
+    </resultMap>
+
+    <!-- 근태관리 들어갔을 때 캘린더에 일정 보여주는 select!! -->
+    <select id="showCalendarSelect" resultMap="selectResultMap">
+        select *
+        from employee a
+            join human_resource c on (a.employee_no = c.employee_no)
+            join department e on (a.department_no = e.department_no)
+            left join dayoff b on (a.employee_no = b.employee_no)
+        <where>
+            <if test="roleAdmin != 1"> <!-- 관리자라면 다 보이고, 사원이라면 지 것만 보이게 -->
+                a.employee_no = #{employeeNo}
+            </if>
+        </where>
+<!--        left로 걸어야 연장근무든, 휴가든 데이터 지웠을 때 해당 데이터만 삭제-->
+    </select>
+
+    <select id="showCalendarSelect2" resultMap="selectResultMap">
+        select *
+        from employee a
+        join human_resource c on (a.employee_no = c.employee_no)
+        join department e on (a.department_no = e.department_no)
+        left join schedule f on (a.employee_no = f.employee_no)
+        <where>
+            <if test="roleAdmin != 1"> <!-- 관리자라면 다 보이고, 사원이라면 지 것만 보이게 -->
+                a.employee_no = #{employeeNo}
+            </if>
+        </where>
+        <!--        left로 걸어야 연장근무든, 휴가든 데이터 지웠을 때 해당 데이터만 삭제-->
+    </select>
+
+<!--    내 신청 현황 드가면 보여지는 데이터들 -->
+    <select id="showMyAppStatus1" resultMap="selectResultMap">
+        select distinct
+            d.employee_name
+            ,d.employee_no
+            ,a.draft_state
+            ,b.leave_type
+            ,f.position
+            ,b.leave_start_date
+            ,b.leave_end_date
+            ,d.employee_name
+            ,e.department_name
+            ,a.draft_no
+            ,a.draft_date
+            ,a.draft_completion_time
+            ,f.usedLeave
+        from
+        draftsh a
+            join dayoff b on (a.draft_no = b.draft_no)
+            join employee d on (a.employee_no = d.employee_no)
+            join department e on (d.department_no = e.department_no)
+            join human_resource f on (d.employee_no = f.employee_no)
+        <where>
+            <if test="roleAdmin != 1"> <!-- 관리자라면 다 보이고, 사원이라면 지 것만 보이게 -->
+                a.employee_no = #{employeeNo}
+            </if>
+        </where>
+<!--        select distinct-->
+<!--            a.leave_start_date,-->
+<!--            a.leave_end_date,-->
+<!--            b.draft_state,-->
+<!--            a.leave_type,-->
+<!--            e.department_name,-->
+<!--            c.employee_name,-->
+<!--            d.position,-->
+<!--            b.draft_date,-->
+<!--            b.draft_completion_time,-->
+<!--            null as schedule_start_date,-->
+<!--            null as schedule_note,-->
+<!--            null as schedule_end_date-->
+<!--        from-->
+<!--        dayoff a-->
+<!--            join draftsh b on (a.draft_no = b.draft_no)-->
+<!--            join employee c on (a.employee_no = c.employee_no)-->
+<!--            join human_resource d on (c.employee_no = d.employee_no)-->
+<!--            join department e on (c.department_no = e.department_no)-->
+<!--            where-->
+<!--            a.leave_type is not null &#45;&#45; **휴가/반차 데이터만 출력**-->
+<!--        union-->
+<!--        select-->
+<!--            null as leave_start_date,-->
+<!--            null as leave_end_date,-->
+<!--            b.draft_state,-->
+<!--            null as leave_type,-->
+<!--            e.department_name,-->
+<!--            c.employee_name,-->
+<!--            d.position,-->
+<!--            b.draft_date,-->
+<!--            b.draft_completion_time,-->
+<!--            f.schedule_start_date,-->
+<!--            f.schedule_note,-->
+<!--            f.schedule_end_date-->
+<!--        from-->
+<!--        schedule f-->
+<!--            join draftsh b on (f.employee_no = b.employee_no)-->
+<!--            join employee c on (f.employee_no = c.employee_no)-->
+<!--            join human_resource d on (c.employee_no = d.employee_no)-->
+<!--            join department e on (c.department_no = e.department_no)-->
+<!--        where-->
+<!--        f.schedule_start_date is not null &#45;&#45; **연장근무 데이터만 출력**-->
+    </select>
+
+    <resultMap id="vacationStatusMapper" type="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">
+        <id property="employeeNo" column="employee_no"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="totalLeave" column="totalLeave"/>
+        <result property="usedLeave" column="usedLeave"/>
+        <result property="leaveType" column="leave_type"/>
+        <result property="scheduleStartDate" column="schedule_start_date"/>
+        <result property="scheduleEndDate" column="schedule_end_date"/>
+        <result property="leaveStartDate" column="leave_start_date"/>
+        <result property="leaveEndDate" column="leave_end_date"/>
+    </resultMap>
+
+    <!-- 휴가 신청 누를 때 데이터 가져와서 보여주는 애 -->
+    <select id="vacationAppMapper" resultMap="vacationStatusMapper">
+    select distinct
+         a.employee_no
+        ,a.employee_name
+        ,c.totalLeave
+        ,c.usedLeave
+<!--        ,d.leave_type-->
+<!--        ,d.leave_start_date-->
+<!--        ,d.leave_end_date-->
+<!--        ,e.schedule_start_date-->
+<!--        ,e.schedule_end_date-->
+    from employee a
+        join department b on (a.department_no = b.department_no)
+        join human_resource c on (a.employee_no = c.employee_no)
+<!--        join dayoff d on (a.employee_no = d.employee_no)-->
+<!--        join schedule e on (a.employee_no = e.employee_no)-->
+    where
+        a.employee_no = #{employeeNo}
+        <!-- 이 사번은 나중에 로그인 연동 할 거-->
+    </select>
+
+    <!--  휴가 신청 했을 때 담당자 이름 가져오는 애 -->
+    <!-- roleAdmin이 1인 애들만 나오게 하려는데 안 됨.... 나중에... -->
+    <select id="vacLeaderSelectMapper" resultMap="vacationStatusMapper">
+<!--        select distinct-->
+<!--             a.employee_no-->
+<!--            ,a.employee_name-->
+<!--            ,b.department_name-->
+<!--        from employee a-->
+<!--            join department b on (a.department_no = b.department_no)-->
+<!--        <where>-->
+<!--            <if test="roleAdmin == 1">-->
+<!--            </if>-->
+<!--        </where>-->
+        select a.employee_name from employee a
+        join authorization b on (a.employee_no = b.employee_no)
+        where  b.auth_of_admin = 1
+    </select>
+
+    <!-- 휴가 신청 했을 때 서버에 저장 -->
+    <select id="vacAppDayOffCount" resultType="int">
+        SELECT COALESCE(MAX(draft_no), 0)
+             FROM dayoff
+        WHERE employee_no = #{employeeNo}
+    </select>
+
+    <update id="vacAppUpdateMapper" parameterType="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">
+        update
+            human_resource
+        set
+            usedLeave = usedLeave + #{vacationApplicationDTO.usedLeave}
+        where
+            employee_no = #{employeeNo};  <!-- 이 사번은 나중에 로그인 연동 할 거-->
+<!-- 남은 연차 컬럼은 산술로 가능하니 있을 필요 없음.-->
+    </update>
+
+    <insert id="vacAppInsertMapper" parameterType="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">
+        INSERT INTO dayoff
+                (employee_no, leave_start_date, leave_end_date, leave_type, draft_no)
+        VALUES
+                (#{employeeNo}, #{vacationApplicationDTO.leaveStartDate},
+        #{vacationApplicationDTO.leaveEndDate},
+        #{vacationApplicationDTO.leaveType}, #{draftNo})
+    </insert>
+    <update id="vacAppUpdateMapper2" parameterType="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">
+        update draftsh set draft_date = now()
+        where draft_no = #{draftNo}
+    </update>
+
+<!--    <update id="vacAppUpdateMapper3" parameterType="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">-->
+<!--        update draftsh set draft_completion_time = now()-->
+<!--                            &lt;!&ndash;나중에 결재자 승인에 맞게 바꿔야함&ndash;&gt;-->
+<!--        where draft_no = #{draftNo}-->
+<!--    </update>-->
+
+<!--    <insert id="vacAppInsertMapper3" parameterType="com.semi.lynk.function.human.model.calendar.VacationApplicationDTO">-->
+<!--        INSERT INTO draftsh (employee_no, draft_title, draft_date,-->
+<!--        draft_completion_time, draft_state, draft_last_step,-->
+<!--        draft_current_step, draft_memo)-->
+<!--        VALUES (12,-->
+<!--        COALESCE(#{draftTitle}, '기본 제목'), &lt;!&ndash; 값이 null이면 '기본 제목' 사용 &ndash;&gt;-->
+<!--        NOW(),-->
+<!--        COALESCE(#{draftCompletionTime},'2024-12-03 09:00:00'),-->
+<!--        #{draftState},-->
+<!--        2,-->
+<!--        1,-->
+<!--        COALESCE(#{draftMemo}, '기본 메모'))-->
+<!--    </insert>-->
+
+    <!-- 관리자가 승인 / 반려 입력 시 상태 변화 update -->
+    <update id="vacStatusUpdateMapper" parameterType="map">
+        UPDATE draftsh
+        SET draft_state = #{newState}, draft_completion_time = NOW()
+        WHERE draft_no = #{draftNo};
+    </update>
+
+    <!-- 관리자가 반려 눌렀을 때 캘린더에 데이터 삭제되는 구문 -->
+    <delete id="vacDeleteMapper" parameterType="int">
+        delete from dayoff
+        where draft_no = #{draftNo};
+    </delete>
+
+    <update id="vacUsedLeaveMapper" parameterType="map">
+        update
+            human_resource
+        set
+            usedLeave = usedLeave - #{usedLeave}
+        where
+            employee_no = #{employeeNo};
+    </update>
+
+    <resultMap id="overTimeAppResultMap" type="com.semi.lynk.function.human.model.calendar.OverTimeApplicationDTO">
+        <id property="id" column="employee_no"/>
+        <result property="name" column="employee_name"/>
+        <result property="scheduleStartDate" column="schedule_start_date"/>
+        <result property="scheduleEndDate" column="schedule_end_date"/>
+        <result property="scheduleType" column="schedule_type"/>
+        <result property="scheduleNote" column="schedule_note"/>
+        <result property="workOff" column="work_off"/>
+    </resultMap>
+
+    <select id="overTimeAppMapper" resultMap="overTimeAppResultMap">
+<!--        select distinct-->
+<!--             employee_name &lt;!&ndash; 결재자 : 사번 , 이름 나중에 연결 / option에 들어갈 애들 &ndash;&gt;-->
+<!--        from-->
+<!--            employee-->
+<!--        where-->
+<!--            employee_no = 12 &lt;!&ndash; 신청 올리는 애 : 나중에 연결&ndash;&gt;-->
+        select a.employee_name from employee a
+        join authorization b on (a.employee_no = b.employee_no)
+        where b.auth_of_admin = 1
+    </select>
+
+    <!-- 연장 근무 신청 -->
+    <insert id="overTimeAppDataMapper" parameterType="com.semi.lynk.function.human.model.calendar.OverTimeApplicationDTO">
+        insert into schedule (schedule_start_date, schedule_type, employee_no,
+                            schedule_note, schedule_end_date)
+        values (#{overTimeDTO.scheduleStartDate}, 0, #{employeeNo}, #{overTimeDTO.scheduleNote}, #{overTimeDTO.scheduleEndDate})
+    </insert>
+
+</mapper>

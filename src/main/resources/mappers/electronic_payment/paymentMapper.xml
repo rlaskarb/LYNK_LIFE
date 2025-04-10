@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.electronic_payment.model.dao.PaymentMapper">
+
+    <!--DepAndEmpAndHumDTO -->
+    <resultMap id="findAllApprovertMap"
+               type="com.semi.lynk.function.electronic_payment.model.dto.DepAndEmpAndHumDTO">
+        <id property="employeeNo" column="employee_no"/>
+        <result property="employeeName" column="employee_name"/>
+        <association property="departmentDTO" javaType="com.semi.lynk.function.electronic_payment.model.dto.DepartmentDTO">
+            <id property="departmentNo" column="department_no"/>
+            <result property="departmentName" column="department_name"/>
+        </association>
+        <association property="humanResourceDTO" javaType="com.semi.lynk.function.electronic_payment.model.dto.HumanResourceDTO">
+            <result property="position" column="position"/>
+        </association>
+    </resultMap>
+
+    <!-- 결재자 선택을 위한 join  -->
+    <select id="findAllApprover" resultMap="findAllApprovertMap">
+        select
+             d.department_no
+            ,d.department_name
+            ,e.employee_no
+            ,e.employee_name
+            ,h.position
+        from
+            department d
+            join employee e on (d.department_no = e.department_no)
+            join human_resource h on (e.employee_no = h.employee_no)
+        order by
+            d.department_no asc;
+    </select>
+
+    <!-- ===================================================================================================================  -->
+
+    <!--FullDraftDTO 일반품의서  -->
+    <insert id="insertDraft" parameterType="com.semi.lynk.function.electronic_payment.model.dto.DraftDTO">
+        INSERT INTO draft (
+        draft_date,draft_status,draft_no,employee_no,draft_memo,draft_title,implementation_amount,retention_period)
+        VALUES (#{draftDate}, COALESCE(#{draftStatus}, 0) , #{draftNo},#{employeeNo},#{draftMemo},#{draftTitle},#{implementationAmount},#{retentionPeriod})
+    </insert>
+
+
+
+    <!-- ===================================================================================================================  -->
+
+    <!--DepAndEmpAndHumDTO -->
+    <resultMap id="findAllDepartmentMap" type="com.semi.lynk.function.electronic_payment.model.dto.DepartmentDTO">
+        <id property="departmentNo" column="department_no"/>
+        <result property="departmentName" column="department_name"/>
+    </resultMap>
+
+    <select id="findAllDepartment" resultMap="findAllDepartmentMap">
+        select
+             department_no
+            ,department_name
+        from
+            department;
+    </select>
+
+</mapper>

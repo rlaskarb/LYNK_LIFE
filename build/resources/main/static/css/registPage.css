@@ -1,0 +1,249 @@
+/* 전체 컨테이너 */
+.regist-div-class {
+    width: 900px;
+    border-radius: 15px; /* 둥근 모서리 */
+    margin-right: 0;
+    margin-top: 20px;
+    padding: 30px;
+    background-color: #ffffff; /* 밝은 배경 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    position: relative;
+    height: 670px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* 제목 스타일 */
+.header {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-align: center; /* 가운데 정렬 */
+    margin-bottom: 30px;
+}
+
+/* 취소 버튼 */
+.cancle-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0; /* 내부 여백 제거 */
+    width: 80px; /* 버튼 고정 너비 */
+    height: 40px; /* 버튼 고정 높이 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    transition: background-color 0.3s ease;
+}
+
+/* 사진 및 테이블 영역 */
+.content-wrapper {
+    display: flex;
+    gap: 30px; /* 간격 확장 */
+}
+
+/* 사진 영역 */
+.photo {
+    width: 150px;
+    height: 200px;
+    border: 2px dashed #ddd; /* 더 부드러운 테두리 */
+    text-align: center;
+    line-height: 200px;
+    background-color: #f5f5f5;
+    color: #999;
+    border-radius: 10px; /* 모서리 둥글게 */
+    flex-shrink: 0;
+}
+
+/* 입력 필드 영역 */
+input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="date"], select {
+    width: 90%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    border: 1px solid #ddd; /* 연한 테두리 */
+    border-radius: 5px;
+    font-size: 14px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* 내부 그림자 */
+}
+
+/* 등록 버튼 */
+.submit-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0; /* 내부 여백 제거 */
+    width: 80px; /* 버튼 고정 너비 */
+    height: 40px; /* 버튼 고정 높이 */
+    display: flex; /* Flexbox 활성화 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #45a049; /* 호버 시 더 짙은 녹색 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .regist-div-class {
+        width: 90%; /* 작은 화면에서 크기 축소 */
+    }
+
+    .content-wrapper {
+        flex-direction: column; /* 세로로 정렬 */
+        align-items: center;
+    }
+}
+
+/* 필드 컨테이너 */
+.field-container {
+    display: flex;
+    flex-wrap: wrap; /* 줄바꿈 허용 */
+    gap: 20px; /* 필드 간격 */
+}
+
+/* 각 필드 그룹 */
+.field-group {
+    flex: 1; /* 각 필드 동일한 너비 */
+    min-width: 300px; /* 최소 너비 */
+}
+
+/*.main-content {*/
+/*    display: flex; !* 플렉스 컨테이너 활성화 *!*/
+/*    gap: 20px; !* 두 컨테이너 간격 *!*/
+/*    flex-wrap: wrap; !* 반응형 지원 *!*/
+/*}*/
+
+.mainContainer{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    article:first-child{
+        width: 38%;
+    }
+
+    .form-container{
+        width: 60%;
+        padding-right: 30px;
+
+
+    }
+}
+
+.form-container {
+    /*flex: 1; !* 폼이 가능한 한 공간을 차지 *!*/
+    min-width: 400px;
+}
+
+/* 전체 컨테이너 간격 조정 */
+.table-container {
+    margin: 20px 0 20px 40px;
+    padding: 20px;
+    background-color: #f9f9f9; /* 밝은 배경 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    overflow-x: auto; /* 테이블 스크롤 가능 */
+    max-height: 670px;
+}
+
+/* 제목 스타일 */
+.table-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 테이블 래퍼: 스크롤 처리 */
+.table-wrapper {
+    max-height: 580px; /* 최대 높이 지정 */
+    overflow-y: auto; /* 세로 스크롤 가능 */
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
+
+/* 테이블 스타일 */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse; /* 테두리 겹침 제거 */
+    text-align: left;
+    font-size: 14px;
+    background-color: #ffffff; /* 흰 배경 */
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* 헤더 스타일 */
+.styled-table thead tr {
+    background-color: #4CAF50; /* 상단 헤더 색상 */
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+/* 테이블 셀 패딩 */
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+}
+
+/* 행 스타일 */
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+/* 홀수 행 배경 */
+.styled-table tbody tr:nth-of-type(odd) {
+    background-color: #f3f3f3;
+}
+
+/* 마우스 오버 효과 */
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .styled-table {
+        font-size: 12px;
+    }
+}
+
+.form{
+    margin-left: 20px;
+}
+
+/*사진 */
+.photo img {
+    width: 100%;        /* 사진 크기: div의 너비에 맞춤 */
+    height: 100%;       /* 사진 크기: div의 높이에 맞춤 */
+    object-fit: cover;  /* 사진 비율 유지하며 div 영역에 꽉 채우기 */
+    border-radius: 10px; /* 모서리 둥글게 */
+}
+
+
+.styled-table img {
+    width: 50px;        /* 고정 너비 */
+    height: 50px;       /* 고정 높이 */
+    object-fit: cover;  /* 비율 유지하며 사진 꽉 채우기 */
+    border-radius: 5px; /* 둥근 테두리 */
+    display: block;     /* 정렬을 위해 block 형식으로 설정 */
+    margin: 0 auto;     /* 테이블 내에서 중앙 정렬 */
+}

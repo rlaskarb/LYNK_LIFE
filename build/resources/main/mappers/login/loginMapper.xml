@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.login.model.dao.LoginMapper">
+
+    <resultMap id="login" type="com.semi.lynk.function.login.model.dto.LoginDTO">
+        <id property="empNo" column="employee_no"/>
+        <result property="empPwd" column="password"/>
+        <result property="empName" column="employee_name"/>
+        <result property="email" column="email"/>
+        <result property="empStatus" column="member_status"/>
+        <result property="loginFailCount" column="login_fail_count"/>
+        <result property="workingStatus" column="working_status"/>
+        <result property="deptNo" column="department_no"/>
+        <result property="depName" column="department_name"/>
+        <result property="position" column="position"/>
+        <result property="image" column="image"/>
+        <result property="roleAdmin" column="auth_of_admin"/>
+        <result property="roleDraft" column="auth_of_document"/>
+        <result property="roleLeave" column="auth_of_leave"/>
+        <result property="roleDepartment" column="auth_of_department"/>
+        <result property="roleNotice" column="auth_of_notice"/>
+        <result property="roleSchedule" column="auth_of_schedule"/>
+    </resultMap>
+
+    <insert id="addEmployee" parameterType="com.semi.lynk.function.login.model.dto.EmpAddDTO">
+        INSERT INTO EMPLOYEE
+        (EMPLOYEE_NO, EMPLOYEE_NAME, PASSWORD, EMAIL, MEMBER_STATUS, LOGIN_FAIL_COUNT, WORKING_STATUS, DEPARTMENT_NO, IMAGE)
+        VALUES
+        (#{userID}, #{userName}, #{userPass}, #{email}, 1, 0, 0, #{deptNo}, #{image})
+    </insert>
+    <insert id="addAuthorization" parameterType="com.semi.lynk.function.login.model.dto.EmpAddDTO">
+        INSERT INTO AUTHORIZATION
+        (AUTH_OF_ADMIN, AUTH_OF_DOCUMENT, AUTH_OF_LEAVE, AUTH_OF_DEPARTMENT, AUTH_OF_NOTICE, AUTH_OF_SCHEDULE, EMPLOYEE_NO)
+        VALUES
+        (0, 0, 0, 0, 0, 0, #{userID});
+    </insert>
+
+    <!-- 사용자 정보 가져오기 -->
+    <select id="findByUsername" resultMap="login">
+        SELECT a.EMPLOYEE_NO
+             , a.PASSWORD
+             , a.EMPLOYEE_NAME
+             , a.EMAIL
+             , a.MEMBER_STATUS
+             , a.IMAGE
+             , b.DEPARTMENT_NAME
+             , c.POSITION
+             , d.AUTH_OF_ADMIN
+             , d.AUTH_OF_DOCUMENT
+             , d.AUTH_OF_LEAVE
+             , d.AUTH_OF_DEPARTMENT
+             , d.AUTH_OF_NOTICE
+             , d.AUTH_OF_SCHEDULE
+          FROM EMPLOYEE a
+          JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+          LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+          LEFT JOIN AUTHORIZATION d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO
+         WHERE a.EMPLOYEE_NO = #{empName}
+    </select>
+
+    <!-- 로그인/아웃 시간 삽입 -->
+    <insert id="insertLoginLog">
+        INSERT INTO LOGIN_DATA
+        (LOGIN_STATUS, LOGIN_TIME, EMPLOYEE_NO)
+        VALUE
+        (#{loginStatus}, #{loginTime}, #{empNo})
+    </insert>
+
+    <!-- 사용자 가장 최근 로그인 기록 -->
+    <select id="selectLatestLogByEmpNo" resultType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+          SELECT EMPLOYEE_NO
+               , LOGIN_STATUS
+               , LOGIN_TIME
+            FROM LOGIN_DATA
+           WHERE EMPLOYEE_NO = #{empNo}
+        ORDER BY LOGIN_TIME DESC
+           LIMIT 1
+    </select>
+
+    <select id="selectLogsByEmpNo" resultType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+          SELECT EMPLOYEE_NO
+               , LOGIN_STATUS
+               , LOGIN_TIME
+            FROM LOGIN_DATA
+           WHERE EMPLOYEE_NO = #{empNo}
+        ORDER BY LOGIN_TIME DESC
+    </select>
+
+    <!-- 출근 확인 -->
+    <select id="checkWorkOn" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+          FROM WORKING_TIME_DATA
+         WHERE EMPLOYEE_NO = #{empNo}
+           AND WORK_DATE = #{workDate}
+           AND WORK_ON IS NOT NULL
+    </select>
+
+    <!-- 출근 -->
+    <update id="updateWorkingStatusToIn" parameterType="com.semi.lynk.function.login.model.dto.LoginDTO">
+        UPDATE EMPLOYEE
+        SET WORKING_STATUS = 1
+        WHERE EMPLOYEE_NO = #{empNo} AND WORKING_STATUS = 0
+    </update>
+
+    <insert id="insertWorkOn" parameterType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+        INSERT IGNORE INTO WORKING_TIME_DATA
+        (WORK_ON, EMPLOYEE_NO, WORK_DATE)
+        VALUES
+        (#{workOn}, #{empNo}, #{workDate})
+    </insert>
+
+    <!-- 퇴근 확인 -->
+    <select id="checkWorkOff" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM WORKING_TIME_DATA
+        WHERE EMPLOYEE_NO = #{empNo}
+        AND WORK_DATE = #{workDate}
+        AND WORK_OFF IS NOT NULL
+    </select>
+
+    <!-- 퇴근 -->
+    <update id="updateWorkingStatusToOut" parameterType="com.semi.lynk.function.login.model.dto.LoginDTO">
+        UPDATE EMPLOYEE
+        SET WORKING_STATUS = 0
+        WHERE EMPLOYEE_NO = #{empNo} AND WORKING_STATUS = 1
+    </update>
+
+    <update id="updateWorkOff" parameterType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+        UPDATE WORKING_TIME_DATA
+        SET WORK_OFF = #{workOff}
+        WHERE EMPLOYEE_NO = #{empNo} AND WORK_DATE = #{workDate}
+    </update>
+
+    <!-- 외근 시작 -->
+    <update id="updateWorkingStatusToOutsideOn" parameterType="com.semi.lynk.function.login.model.dto.LoginDTO">
+        UPDATE EMPLOYEE
+        SET WORKING_STATUS = 2
+        WHERE EMPLOYEE_NO = #{empNo} AND WORKING_STATUS = 1
+    </update>
+
+    <update id="updateWorkOutsideOn" parameterType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+        UPDATE WORKING_TIME_DATA
+        SET WORK_ON_OUTSIDE = #{workOnOutside}
+        WHERE EMPLOYEE_NO = #{empNo} AND WORK_DATE = #{workDate}
+    </update>
+
+    <!-- 외근 종료 -->
+    <update id="updateWorkingStatusToOutsideOff" parameterType="com.semi.lynk.function.login.model.dto.LoginDTO">
+        UPDATE EMPLOYEE
+        SET WORKING_STATUS = 1
+        WHERE EMPLOYEE_NO = #{empNo} AND WORKING_STATUS = 2
+    </update>
+
+    <update id="updateWorkOutsideOff" parameterType="com.semi.lynk.function.login.model.dto.LoginLogDTO">
+        UPDATE WORKING_TIME_DATA
+        SET WORK_OFF_OUTSIDE = #{workOffOutside}
+        WHERE EMPLOYEE_NO = #{empNo} AND WORK_DATE = #{workDate}
+    </update>
+
+</mapper>

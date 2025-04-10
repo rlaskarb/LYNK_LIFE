@@ -1,0 +1,173 @@
+/* customer.html */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+.fix-th {
+    position: sticky;
+    display: inline-table;
+    top: 0;
+    z-index: 2;
+    width: calc(100% - 17px);
+}
+
+table.listTableBody {
+    width: 100%;
+    table-layout: fixed; /* 고정 레이아웃 */
+    border-collapse: collapse;
+}
+
+table.listTableHeader th:last-child,
+table.listTableBody td:last-child {
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    background-color: white;
+    text-align: start;
+}
+
+.insert-container, .list-container {
+    padding: 30px;
+}
+
+.CustomerInsertForm label {
+    font-size: 15px;
+    font-width: 900;
+    margin-right: 5px;
+}
+
+.CustomerInsertForm input {
+    margin-right: 10px;
+}
+
+.confirmModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modalButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* contract.html */
+.newContract-container {
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.form-group label {
+    width: 140px;
+    text-align: right;
+    margin-right: 15px;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.form-control, .form-select {
+    display: inline;
+    width: 200px;
+    padding: 3px;
+    margin: 3px;
+    font-size: 12px;
+}
+
+.btn-def {
+    height: auto;
+    width: auto;
+    font-size: 10px;
+    padding: 4px;
+    background-color: #3d3d3d;
+    border: 1px solid #2d2d2d;
+}
+
+.form-submit {
+    height: auto;
+    width: auto;
+    margin: 40px 20px;
+    font-size: 14px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-weight: 900;
+    color: #2d2d2d;
+}
+
+.form-submit:hover {
+    color: white;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* list.html */
+.db_Life {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dbBox {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.dbBox > h2 {
+    font-weight: bolder;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 여러... 상품 등록 페이지용 */
+.insertProduct-container, .productList-container {
+    padding: 30px;
+}
+
+.ProductForm label {
+    font-weight: bolder;
+    margin-right: 5px;
+}
+
+.ProductForm input {
+    margin-right: 30px;
+}
+
+.ProductForm label {
+    font-weight: bolder;
+    margin-right: 5px;
+}
+
+.ProductForm input {
+    margin-right: 30px;
+}
+
+.modal-dialog {
+    margin-top: 200px; /* 원하는 만큼 값을 조정하세요 */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: center; /* 버튼을 가운데 정렬 */
+    gap: 10px; /* 버튼 간격 설정 */
+}

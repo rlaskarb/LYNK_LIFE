@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공지사항 상세보기</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/notice.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+<script src="/js/common.js"></script>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}"></header>
+    <script src="/js/calendar.js"></script>
+
+    <section class="main-content">
+
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/notice/list">공지사항</a>
+        </div>
+
+        <article class="main-content" th:if="${notice != null}">
+            <div class="notice-view-container">
+
+            <div class="notice-title-container">
+                <span class="notice-title-label">제목 : </span>
+                <h2 class="notice-title" th:text="${notice.noticeTitle}"></h2>
+            </div>
+            <div class="notice-info">
+                <span class="info-item">번호: <span th:text="${notice.noticeNo}"></span></span>
+                <span class="info-item">글종류: <span th:text="${notice.noticeVote == 0 ? '공지' : (notice.noticeVote == 1 ? '투표' : '투표완료')}"></span></span>
+                <span class="info-item">작성자: <span th:text="${notice.employeeName}"></span></span>
+                <span class="info-item">작성일: <span th:text="${#temporals.format(notice.noticeDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                <span class="info-item">조회수: <span th:text="${notice.viewerCount}"></span></span>
+            </div>
+
+
+            <p>내용</p>
+            <div class="notice-content" th:utext="${notice.noticeContent}"></div>
+
+
+                <button class="btn btn-primary mb-3 collapsible" th:classappend="${notice.noticePreNo == null} ? 'd-none'"
+                        th:disabled="${notice.noticePreNo == null}" style="margin-top: 10px;">
+                    원본문서
+                </button>
+                <div class="content" th:if="${notice.noticePreNo != null}">
+                    <div class="notice-title-container">
+                        <span class="notice-title-label">제목 : </span>
+                        <h2 class="notice-title" th:text="${preNotice.noticeTitle}"></h2>
+                    </div>
+                    <div class="notice-info">
+                        <span class="info-item">번호: <span th:text="${preNotice.noticeNo}"></span></span>
+                        <span class="info-item">글종류: <span th:text="${preNotice.noticeVote == 0 ? '공지' : (preNotice.noticeVote == 1 ? '투표' : '투표완료')}"></span></span>
+                        <span class="info-item">작성자: <span th:text="${preNotice.employeeName}"></span></span>
+                        <span class="info-item">작성일: <span th:text="${#temporals.format(preNotice.noticeDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                        <span class="info-item">조회수: <span th:text="${preNotice.viewerCount}"></span></span>
+                    </div>
+
+                    <p>내용</p>
+                    <div class="notice-content"  style="margin-bottom: 10px;" th:utext="${preNotice.noticeContent}"></div>
+
+                </div>
+                <div th:if="${currentUser == notice.employeeNo}" style="margin-top: 10px;">
+                    <a th:href="@{/notice/{noticeNo}/delete(noticeNo=${notice.noticeNo})}" class="btn btn-primary mb-3" style="background-color: #2d2d2d; border-color: #2d2d2d;">삭제</a>
+                    <a th:href="@{/notice/{noticeNo}/edit(noticeNo=${notice.noticeNo})}" class="btn btn-primary mb-3" style="background-color: #2d2d2d; border-color: #2d2d2d;">수정</a>
+                    <a href="/notice/list" class="btn btn-primary mb-3" style="background-color: #2d2d2d; border-color: #2d2d2d;">목록으로 돌아가기</a>
+                </div>
+
+
+            </div>
+        </article>
+
+
+
+
+        <script>
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                if (!coll[i].disabled) {
+                    coll[i].addEventListener("click", function() {
+                        this.classList.toggle("active");
+                        var content = this.nextElementSibling;
+                        if (content.style.maxHeight){
+                            content.style.maxHeight = null;
+                        } else {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                        }
+                    });
+                }
+            }
+        </script>
+    </section>
+
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

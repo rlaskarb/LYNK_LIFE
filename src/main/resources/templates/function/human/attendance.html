@@ -1,0 +1,214 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>근태 관리</title>
+
+    <link rel="stylesheet" th:href="@{/css/attendance.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/main.min.css" rel="stylesheet">
+
+<body>
+
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}" class="header-class"></header>
+
+    <section class="main-content">
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/">인사 관리</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/employee/attendance">근태 관리</a>
+        </div>
+
+        <div id='calendar'></div>
+
+        <!-- 일정 눌렀을 때 상세 정보 모달창 -->
+        <div id="eventModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">일정 상세 정보</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>구 분 :</strong> <span id="eventType"></span></p>
+                        <p><strong>이 름 :</strong> <span id="eventName"></span></p>
+                        <p><strong>부 서 :</strong> <span id="eventDepartment"></span></p>
+                        <p><strong>직 위 :</strong> <span id="eventPosition"></span></p>
+                        <p><strong>시작 일시 :</strong> <span id="eventStart"></span></p>
+                        <p><strong>종료 일시 :</strong> <span id="eventEnd"></span></p>
+                        <p><strong>메 모 :</strong> <span id="eventMemo"></span></p>
+<!--                        여기 html 메모만 주석하면 모달 안 띄워짐. js도 함께 주석 해야 됨.-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div class="left-buttons">
+        <button class="application-vacation-button" id="vacation-button-id">휴가 신청</button>
+        <button class="application-overtime-button" id="overtime-button-id">연장 근무 신청</button>
+            </div>
+
+<!--            연차 신청 모달-->
+            <div id="vacationModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">연차 사용 계획서 작성</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="leader2">담당자</label>
+                            <select id="leader2" class="form-control"></select>
+                            <br><br>
+
+                            <label for="allLeaveDay">총 연차 개수</label>
+                            <input type="text" id="allLeaveDay" class="form-control" disabled><br><br>
+
+                            <div id="startDateTime">
+                                <label for="startDay">시작일</label>
+                                <input type="date" id="startDay" class="form-control">
+                                <select id="startTime" class="form-control">
+                                    <option value="">시간 선택</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="14:00">14:00</option>
+                                </select>
+                            </div><br><br>
+
+                            <div id="endDateTime">
+                                <label for="endDay">종료일</label>
+                                <input type="date" id="endDay" class="form-control">
+                                <select id="endTime" class="form-control">
+                                    <option value="">시간 선택</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="18:00">18:00</option>
+                                </select>
+                            </div><br><br>
+
+                            <label for="useDay">총 사용 개수</label>
+                            <input type="number" id="useDay" class="form-control" disabled><br><br>
+
+                            <label for="remainingDay">남은 연차 개수</label>
+                            <input type="text" id="remainingDay" class="form-control" disabled>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button id="vacationApp" type="button" class="btn btn-primary">제출</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 연장 근무 신청 모달 -->
+            <div id="overTimeModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">연장 근무 계획서 작성</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="leader">담당자</label>
+                            <select id="leader" class="form-control"></select>
+                            <br><br>
+
+                            <div id="startOverTimeDay">
+                                <label for="startOverDay">시작 시간</label>
+                                <input type="date" id="startOverDay" class="form-control">
+                                <select id="startOverTime" class="form-control">
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                </select>
+                            </div><br><br>
+
+                            <div id="endOverTimeDay">
+                                <label for="endOverDay">종료 시간</label>
+                                <input type="date" id="endOverDay" class="form-control">
+                                <select id="endOverTime" class="form-control">
+                                    <option value="19:00">19:00</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="22:00">22:00</option>
+                                </select>
+                            </div><br><br>
+
+                            <label for="allOverTime">총 연장 근무 시간</label>
+                            <input type="number" id="allOverTime" class="form-control" disabled><br><br>
+
+                            <label for="overTimeReason">사 유</label>
+                            <select id="overTimeReason" class="form-control">
+                                <option value="">사유 선택</option>
+                                <option value="reason1">사유 1</option>
+                                <option value="reason2">사유 2</option>
+                                <option value="reason3">사유 3</option>
+                                <option value="selfInput">직접 입력</option>
+                            </select>
+                            <input type="text" id="selfReasonInput" class="form-control mt-2" style="display:none;" placeholder="사유를 입력하세요">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            <button id="overTimeApp" type="button" class="btn btn-primary">제출</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-buttons">
+                <button class="application-my-button" id="status-my-id"
+                        onclick="location.href='/employee/appStatus'"
+                        th:text="${session.roleAdmin == 1 ? '결재 승인 현황' : '나의 신청 현황'}"></button>
+            </div>
+        </div>
+
+    </section>
+    <!--            휴가 신청서 제출 했을 때 모달 안 됨! 일단 얼러트로 대체-->
+    <!--            <div id="vacAppMessage" style="display: none;" th:text="${vacAppMessage ?: ''}"></div>-->
+    <!--&lt;!&ndash;             모랄 메씨지 &ndash;&gt;-->
+    <!--            <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">-->
+    <!--                <div class="modal-dialog">-->
+    <!--                    <div class="modal-content">-->
+    <!--                        <div class="modal-header">-->
+    <!--                            <h5 class="modal-title" id="myModalLabel">알림</h5>-->
+    <!--                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+    <!--                        </div>-->
+    <!--                        <div class="modal-body2">-->
+    <!--                            모달 메시지가 여기에 표시됩니다.-->
+    <!--                        </div>-->
+    <!--                        <div class="modal-footer">-->
+    <!--                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                </div>-->
+    <!--            </div>-->
+
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+</div>
+
+<script th:src="@{/js/attendance.js}"></script>
+<script src="../../../static/js/attendance.js"></script>
+<script th:src="@{/js/index.global.js}"></script>
+<script th:src="@{/js/index.global.js/index.global.min.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/calendar.js}"></script>
+<!-- ① Popper.js 라이브러리 - 툴팁 , 팝오버 , 드롭다운 관리 -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<!-- ② Popper.js를 필요로 함 - 자바스크립트 파일 로드 - UI 구성 요소 쉽게 만들어줌 - 드롭다운 , 모달 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

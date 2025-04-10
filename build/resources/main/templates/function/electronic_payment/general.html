@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>일반품의서</title>
+
+    <!-- 공통 스타일 및 페이지 관련 CSS -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/paymentGeneral.css}">
+    <!-- Bootstrap CSS 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}" class="header-class"></header>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <section class="main-content">
+
+        <!-- 페이지 경로 표시 -->
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/">전자결재</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/payment/list">기안하기</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/payment/general">일반품의서</a>
+        </div>
+
+        <!-- 일반 품의서 작성 폼 -->
+        <article class="article-general">
+            <h1 class="h1-general">일반품의서</h1>
+            <table class="table-general">
+                <tr>
+                    <th class="th-general">문서번호</th>
+                    <td><input class="input-general" type="text" id="draftNo" placeholder="문서번호 입력"></td>
+                    <th class="th-general">품의일</th>
+                    <td><input class="input-general" type="date" id="documentDate"></td>
+                </tr>
+                <tr>
+                    <th class="th-general">품의부서</th>
+                    <!-- 부서명 선택 -->
+                    <td>
+                        <input class="input-general" type="text" id="departmentId" placeholder="부서 번호" readonly>
+                        <input class="input-general" type="text" id="departmentName" placeholder="부서명" readonly>
+                        <button id="selectDepartmentButton" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#departmentModal">부서 조회</button>
+                    </td>
+                    <th class="th-general">시행금액</th>
+                    <td><input type="number" id="amount" placeholder="금액 입력"></td>
+                </tr>
+                <tr>
+                    <th class="th-general">작성자</th>
+                    <td>
+                        <span id="employeeName" th:text="${session.empName}" th:value="${session.empName}">작성자</span>
+                    </td>
+                    <th class="th-general">보존기간</th>
+                    <td><input class="input-general" type="text" id="retentionPeriod" placeholder="보존기간 입력"></td>
+                </tr>
+                <tr>
+                    <th class="th-general">제목</th>
+                    <td colspan="3"><input type="text" id="draftTitle" placeholder="제목 입력"></td>
+                </tr>
+                <tr>
+                    <th class="th-general">내용</th>
+                    <td colspan="3">
+                        <textarea class="textarea-general" id="draftMemo" placeholder="상세 내용을 입력하세요"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </article>
+
+        <!-- 부서 선택 모달 -->
+        <div class="modal fade" id="departmentModal" tabindex="-1" aria-labelledby="departmentModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="departmentModalLabel">부서 조회</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>부서번호</th>
+                                <th>부서명</th>
+                                <th>선택</th>
+                            </tr>
+                            </thead>
+                            <tbody id="departmentTable">
+                            <!-- 부서 목록 동적으로 추가 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결재선 섹션 -->
+        <article class="article-approval">
+            <div id="approval-container" class="d-flex justify-content-end align-items-center mb-2">
+                <h3 class="approval-label me-2">결재선</h3>
+                <!-- 결재선 추가 모달을 띄우는 버튼 -->
+                <button id="approvalButton" class="btn" data-bs-toggle="modal" data-bs-target="#approvalModal">+</button>
+            </div>
+            <!-- 선택된 결재자 목록 -->
+            <div id="approver-list" class="mt-2">
+                <h5 class="mb-2">선택된 결재자</h5>
+                <div id="selectedApproverList" class="d-flex flex-column gap-2"></div>
+            </div>
+
+            <!-- 파일 첨부 섹션 -->
+            <div class="file-attachment-section">
+                <h3>파일 첨부</h3>
+                <!-- 파일 선택 버튼 -->
+                <button id="addFileButton">+</button>
+                <!-- 실제 파일 입력 필드 -->
+                <input type="file" id="fileInput" style="display: none;" />
+                <!-- 파일 이름 표시 -->
+                <p id="fileName" style="display: none;">파일 이름: </p>
+            </div>
+        </article>
+
+
+
+        <!-- 기안하기 버튼 -->
+        <div id="submit-section">
+            <!-- 자바스크립트에서 draftButton으로 처리됨 -->
+            <button id="draftButton" class="btn btn-success">기안하기</button>
+        </div>
+
+        <!-- 결재선 선택 모달 -->
+        <div class="modal fade" id="approvalModal" tabindex="-1" aria-labelledby="approvalModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="approvalModalLabel">결재자 선택</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 결재자 목록 테이블 -->
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>부서명</th>
+                                <th>사원명</th>
+                                <th>직책</th>
+                                <th>선택</th>
+                            </tr>
+                            </thead>
+                            <tbody id="approverTable"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- 모달 닫기 버튼 -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 공통 요소 추가 -->
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+</div>
+
+<!-- Popper.js: 툴팁, 팝오버 관리 -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+<!-- 페이지 기능 스크립트 -->
+<script th:src="@{/js/paymentGeneral.js}"></script>
+</body>
+</html>

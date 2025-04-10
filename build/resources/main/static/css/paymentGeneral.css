@@ -1,0 +1,136 @@
+/* ------ 일반 품의서 스타일 ------ */
+.body-general {
+    font-family: Arial, sans-serif; /* 전체 폰트 설정 */
+    margin: 0;
+    padding: 0;
+}
+
+.article-generalcle {
+    width: 50%; /* 화면의 절반 너비 */
+    margin: 2rem auto; /* 상하 2rem, 좌우 중앙 정렬 */
+    background-color:#f1f1f1; /* 배경색 흰색 */
+    border: 1px solid #ddd; /* 테두리 설정 */
+    padding: 20px; /* 내부 여백 */
+
+}
+
+.h1-general {
+    text-align: center; /* 제목 중앙 정렬 */
+    margin-bottom: 1rem; /* 아래 여백 */
+    font-size: 1.8rem; /* 글자 크기 설정 */
+}
+
+
+.table-general {
+    width: 100%; /* 표 너비 100% */
+    border-collapse: collapse; /* 셀 테두리 합치기 */
+    margin-top: 10px; /* 위 여백 */
+}
+
+.th-general, .td-general {
+    border: 1px solid black; /* 셀 테두리 설정 */
+    padding: 10px; /* 내부 여백 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    vertical-align: middle; /* 수직 가운데 정렬 */
+}
+
+.th-general {
+    background-color: #f1f1f1; /* 헤더 셀 배경색 */
+    font-weight: bold; /* 글자 굵게 */
+    text-align: center; /* 중앙 정렬 */
+}
+
+.input-general, .textarea-general {
+    width: 100%; /* 너비 100% */
+    box-sizing: border-box; /* 테두리 포함 크기 설정 */
+    padding: 8px; /* 내부 여백 */
+    border: 1px solid black; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 둥글게 */
+    resize: none; /* textarea 크기 조절 비활성화 */
+}
+
+.textarea-general {
+    height: 80px; /* textarea 높이 설정 */
+}
+
+.button-general {
+    margin-top: 15px; /* 위 여백 */
+    padding: 10px 15px; /* 내부 여백 */
+    color: black; /* 글자색 흰색 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 테두리 둥글게 */
+    cursor: pointer; /* 마우스 포인터 변경 */
+}
+
+
+/* ------ 결재선 섹션 스타일 ------ */
+#approversection {
+    display: flex; /* 가로 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: space-between; /* 요소 사이 간격 설정 */
+    margin-bottom: 20px; /* 아래 여백 */
+}
+
+
+#approvalButton {
+    font-size: 30px; /* 버튼 텍스트 크기 */
+    color: black; /* 글자색 */
+    background-color: transparent; /* 배경 투명 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 포인터 변경 */
+}
+
+
+#approverlist {
+    font-size: 18px; /* 리스트 텍스트 크기 */
+    margin-bottom: 20px; /* 아래 여백 */
+}
+
+
+#approverlist-items {
+    display: flex; /* 가로 정렬 */
+    flex-direction: column; /* 세로 정렬 */
+    gap: 10px; /* 아이템 간 간격 */
+}
+
+
+/* ------ 파일 첨부 섹션 ------ */
+#filesection {
+    margin-top: 20px; /* 위 여백 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+
+#addfilebtn {
+    font-size: 25px; /* 버튼 크기 */
+    color: black; /* 글자색 */
+    background-color: transparent; /* 배경 투명 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 마우스 포인터 변경 */
+}
+
+
+#filename {
+    font-size: 14px; /* 텍스트 크기 */
+    color: #555; /* 글자색 회색 */
+    margin-top: 10px; /* 위 여백 */
+}
+
+/* ------ 기안하기 버튼 ------ */
+#submit-section {
+    position: fixed; /* 화면 고정 */
+    bottom: 100px; /* 하단 여백 */
+    right: 30px; /* 우측 여백 */
+}
+
+#submit-sectionbutton {
+    background-color: #666666; /* 배경색 설정 */
+    color: black; /* 글자색 */
+    font-size: 18px; /* 텍스트 크기 */
+    padding: 10px 20px; /* 내부 여백 */
+}
+
+#draftButton{
+    background-color: #999999;
+    color: black; /* 글자색 */
+}

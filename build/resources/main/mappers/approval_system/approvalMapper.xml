@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.approval_system.model.dao.ApprovalMapper">
+    <resultMap id="draftResultMap" type="com.semi.lynk.function.approval_system.model.dto.DraftDTO">
+        <id property="draftNo" column="draft_no"/>
+        <result property="employeeNo" column="employee_no"/>
+        <result property="draftTitle" column="draft_title"/>
+        <result property="draftDate" column="draft_date"/>
+        <result property="draftCompletionTime" column="draft_completion_time"/>
+        <result property="draftRetentionSchedule" column="draft_retention_schedule"/>
+        <result property="draftState" column="draft_state"/>
+        <result property="draftCost" column="draft_cost"/>
+        <result property="draftLastStep" column="draft_last_step"/>
+        <result property="draftCurrentStep" column="draft_current_step"/>
+        <result property="draftMemo" column="draft_memo"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="approvalState" column="approval_state"/>
+    </resultMap><!-- -->
+
+    <resultMap id="ApprovalResultMap" type="com.semi.lynk.function.approval_system.model.dto.ApprovalDTO">
+        <id property="draftNo" column="draft_no"/>
+        <result property="employeeNo" column="employee_no"/>
+        <result property="approvalState" column="approval_state"/>
+        <result property="approvalStep" column="approval_step"/>
+        <result property="approvalPosible" column="approval_posible"/>
+        <result property="approvalCompletionTime" column="approval_completion_time"/>
+        <result property="approvalMemo" column="approval_memo"/>
+        <result property="position" column="position"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="departmentName" column="department_name"/>
+    </resultMap>
+
+    <resultMap id="EmployeeResultMap" type="com.semi.lynk.function.approval_system.model.dto.EmployeeDTO">
+        <result property="employeeNo" column="employee_no"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="departmentNo" column="department_no"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="position" column="position" />
+    </resultMap>
+
+    <insert id="insertDraft" parameterType="com.semi.lynk.function.approval_system.model.dto.DraftDTO" useGeneratedKeys="true" keyProperty="draftNo">
+        INSERT INTO draftsh (employee_no, draft_title, draft_date, draft_completion_time, draft_retention_schedule, draft_state, draft_cost, draft_last_step, draft_current_step, draft_memo)
+        VALUES (#{employeeNo}, #{draftTitle}, #{draftDate}, #{draftCompletionTime}, #{draftRetentionSchedule}, #{draftState}, #{draftCost}, #{draftLastStep}, #{draftCurrentStep}, #{draftMemo});
+    </insert>
+
+    <select id="getAllEmployees" resultMap="EmployeeResultMap">
+        SELECT
+        e.employee_no,
+        e.employee_name,
+        d.department_no,
+        d.department_name,
+        h.position
+        FROM
+        employee e
+        LEFT JOIN
+        department d ON e.department_no = d.department_no
+        LEFT JOIN
+        human_resource h ON e.employee_no = h.employee_no
+        ORDER BY department_no
+    </select>
+
+
+    <select id="getDraftsCount" parameterType="String">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM draftsh
+        WHERE (employee_no = #{empno}) and (${state})
+        ]]>
+    </select>
+
+    <select id="getDrafts" parameterType="String" resultMap="draftResultMap">
+        <![CDATA[
+        SELECT draft_no, employee_no, draft_title, draft_date, draft_completion_time, draft_retention_schedule, draft_state, draft_cost, draft_last_step, draft_current_step, draft_memo, employee_Name
+        FROM draftsh join employee using(employee_no)
+        WHERE (employee_no = #{empno}) and ${state}
+        ORDER BY
+        draft_no DESC
+        limit #{page}, #{count}
+        ]]>
+    </select>
+
+    <select id="selectDraftByDNO" parameterType="Long" resultMap="draftResultMap">
+        SELECT draft_no, employee_no, draft_title, draft_date, draft_completion_time, draft_retention_schedule, draft_state, draft_cost, draft_last_step, draft_current_step, draft_memo, employee_Name
+        FROM draftsh join employee using(employee_no)
+        WHERE draft_no = #{draftNo}
+    </select>
+
+    <insert id="insertApproval" parameterType="com.semi.lynk.function.approval_system.model.dto.ApprovalDTO">
+        INSERT INTO approval (draft_no, employee_no, approval_state, approval_step, approval_posible, approval_completion_time, approval_memo)
+        VALUES (#{draftNo}, #{employeeNo}, #{approvalState}, #{approvalStep}, #{approvalPosible}, #{approvalCompletionTime}, #{approvalMemo})
+    </insert>
+
+    <select id="selectForApproval" resultMap="draftResultMap">
+        <![CDATA[
+        SELECT draft_no, dr.employee_no, draft_title, draft_date, draft_completion_time, draft_retention_schedule, draft_state, draft_cost, draft_last_step, draft_current_step, draft_memo, employee_Name, approval_state
+        FROM
+        approval a
+        LEFT JOIN
+        draftsh dr using(draft_no)
+        LEFT JOIN
+        employee e ON dr.employee_no = e.employee_no
+        LEFT JOIN
+        department d using(department_no)
+        WHERE
+        a.employee_no = #{empNo} ${state}
+        ORDER BY draft_completion_time DESC, draft_no DESC
+        LIMIT #{start}, #{size}
+        ]]>
+    </select>
+
+    <select id="getApprovalsCount" parameterType="String">
+        SELECT COUNT(*)
+        FROM approval a LEFT JOIN draftsh dr using(draft_no)
+        WHERE a.employee_no = #{empNo}
+    </select>
+
+    <select id="selectApprovals" parameterType="Long" resultMap="ApprovalResultMap">
+        SELECT draft_no, employee_no, approval_state, approval_step, approval_posible, approval_completion_time, approval_memo, position, employee_name, department_name
+        FROM approval a LEFT JOIN employee e using(employee_no) LEFT JOIN department d using(department_no) LEFT JOIN human_resource h using(employee_no)
+        WHERE draft_no = #{draftNo}
+        ORDER BY approval_step ASC, position DESC
+    </select>
+
+    <update id="setDraftStepAndState">
+        UPDATE draftsh
+        SET draft_state = #{state,jdbcType=INTEGER},
+        draft_last_step = #{lastStep,jdbcType=INTEGER}
+        WHERE draft_no = #{draftNo,jdbcType=BIGINT}
+    </update>
+
+    <update id="setDraftStateAndTime">
+        UPDATE draftsh
+        SET draft_state = #{state,jdbcType=INTEGER},
+        draft_completion_time = #{currentTime,jdbcType=VARCHAR}
+        WHERE draft_no = #{draftNo,jdbcType=BIGINT}
+    </update>
+
+    <update id="updateApproval" >
+        UPDATE approval
+        SET approval_state = #{approvalDTO.approvalState}, approval_completion_time = #{approvalDTO.approvalCompletionTime}
+        WHERE (draft_no = #{draftNo}) AND (employee_no = #{empNo})
+    </update>
+
+    <select id="countCurrentStep" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*)
+        FROM approval a LEFT JOIN draftsh dr using(draft_no)
+        WHERE draft_no = #{draftNo,jdbcType=BIGINT} AND approval_step = #{currentStep,jdbcType=INTEGER} AND approval_state < 2
+        ]]>
+    </select>
+
+    <update id="setDraftCurrentStep">
+        UPDATE draftsh
+        SET draft_current_step = #{curStep,jdbcType=INTEGER}
+        WHERE draft_no = #{draftNo,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteApprovalByDNO" parameterType="Long">
+        DELETE FROM approval
+        WHERE draft_no = #{draftNo}
+    </delete>
+
+    <delete id="deleteDraftByDNO" parameterType="Long">
+        DELETE FROM draftsh
+        WHERE draft_no = #{draftNo}
+    </delete>
+
+
+
+</mapper>

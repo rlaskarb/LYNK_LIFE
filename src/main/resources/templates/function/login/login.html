@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>login</title>
+    <link rel="stylesheet" th:href="@{/css/loginPage.css}">
+</head>
+<body>
+    <div class="inputSection" id="inputSection">
+        <div class="logo" id="logo">
+            <!-- logo 이미지 영역 -->
+            <img src="/images/profiletest.jpg" alt="logotest"><br>
+            <label>LYNK</label>
+        </div>
+        <div class="inputDiv" id="inputDiv">
+            <!-- 동적 처리? 타임리프 혹은 백엔드 처리 등의 확인 필요 -->
+            <form action="/login" method="post">
+                <input type="text" name="empId" placeholder="아이디" autocomplete="off" required><br>
+                <input type="password" name="empPwd" placeholder="비밀번호" autocomplete="off" required><br>
+                <button type="submit">로그인</button>
+            </form>
+        </div>
+<!--        <div class="loginAttr">-->
+<!--            <div class="loginIdSave">-->
+<!--                <input type="checkbox" id="save_id" name="save_id" value="Y">-->
+<!--                <label for="save_id">아이디 저장</label>-->
+<!--            </div>-->
+<!--            <div class="passwordHelp">-->
+<!--&lt;!&ndash;                <a href="passwordRequest">비밀번호 문의</a>&ndash;&gt;-->
+<!--                <a href="/login/empAdd">임시 회원가입</a>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+<!--    <script src="/js/saveId.js"></script>-->
+</body>
+</html>

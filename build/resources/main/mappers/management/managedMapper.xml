@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.lynk.function.management.model.dao.ManagedMapper">
+
+    <resultMap id="AccountList" type="com.semi.lynk.function.management.model.dto.AccountDTO">
+        <id property="empID" column="employee_no"/>
+        <result property="empName" column="employee_name"/>
+        <result property="deptName" column="department_name"/>
+        <result property="position" column="position"/>
+        <result property="email" column="email"/>
+        <result property="loginTime" column="login_time"/>
+        <result property="memberStatus" column="member_status"/>
+        <result property="empPwd" column="password"/>
+        <result property="deptNo" column="department_no"/>
+        <result property="image" column="image"/>
+        <result property="loginStatus" column="login_status"/>
+        <result property="roleAdmin" column="auth_of_admin"/>
+    </resultMap>
+
+    <resultMap id="AccountRole" type="com.semi.lynk.function.management.model.dto.AccountDTO">
+        <id property="empID" column="employee_no"/>
+        <result property="empName" column="employee_name"/>
+        <result property="deptName" column="department_name"/>
+        <result property="position" column="position"/>
+        <result property="roleAdmin" column="auth_of_admin"/>
+        <result property="roleDraft" column="auth_of_document"/>
+        <result property="roleLeave" column="auth_of_leave"/>
+        <result property="roleDepartment" column="auth_of_department"/>
+        <result property="roleNotice" column="auth_of_notice"/>
+        <result property="roleSchedule" column="auth_of_schedule"/>
+    </resultMap>
+
+    <!-- 활성화 계정 카운트 -->
+    <select id="getMemberStatusCounts" resultType="map">
+        SELECT
+         COUNT(CASE WHEN MEMBER_STATUS IN (1, 2) THEN 1 END) AS activeAcc,
+         COUNT(CASE WHEN MEMBER_STATUS = 2 THEN 1 END) AS suspendedAcc
+          FROM EMPLOYEE
+    </select>
+
+    <!-- 비활성화 계정 카운트 -->
+    <select id="getMemberStatusCountsInac" resultType="map">
+        SELECT
+         COUNT(CASE WHEN MEMBER_STATUS IN (0, 3) THEN 1 END) AS inactiveAcc,
+         COUNT(CASE WHEN MEMBER_STATUS = 3 THEN 1 END) AS removedAcc
+          FROM EMPLOYEE
+    </select>
+
+    <!-- 활성화 계정 목록 출력 -->
+    <select id="getActiveEmployee" resultMap="AccountList">
+          SELECT a.EMPLOYEE_NO
+               , a.EMPLOYEE_NAME
+               , b.DEPARTMENT_NAME
+               , c.POSITION
+               , a.EMAIL
+               , d.LOGIN_TIME
+               , a.MEMBER_STATUS
+            FROM EMPLOYEE a
+            JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+            LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+            LEFT JOIN (SELECT EMPLOYEE_NO, LOGIN_TIME
+                         FROM (SELECT EMPLOYEE_NO, LOGIN_TIME,
+                                      ROW_NUMBER() OVER (PARTITION BY EMPLOYEE_NO ORDER BY LOGIN_TIME DESC) AS RN
+                                 FROM LOGIN_DATA) sub
+                        WHERE RN = 1) d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO
+           WHERE a.MEMBER_STATUS IN (1, 2)
+        ORDER BY a.MEMBER_STATUS DESC
+               , a.EMPLOYEE_NAME ASC;
+    </select>
+
+    <!-- 활성화 계정 삭제 상태로 변경(삭제) -->
+    <update id="deactivateAccounts" parameterType="map">
+        UPDATE EMPLOYEE
+           SET MEMBER_STATUS = 3
+         WHERE EMPLOYEE_NO IN
+        <foreach collection="empIDs" item="empID" open="(" separator="," close=")">
+            #{empID}
+        </foreach>
+    </update>
+
+    <!-- 삭제 계정 활성화 상태로 변경(복구) -->
+    <update id="restoreAccounts" parameterType="map">
+        UPDATE EMPLOYEE
+           SET MEMBER_STATUS = 2
+         WHERE EMPLOYEE_NO IN
+        <foreach collection="empIDs" item="empID" open="(" separator="," close=")">
+            #{empID}
+        </foreach>
+    </update>
+
+    <!-- 비활성화 계정 목록 출력 -->
+    <select id="getInactiveEmployee" resultMap="AccountList">
+          SELECT a.EMPLOYEE_NO
+               , a.EMPLOYEE_NAME
+               , b.DEPARTMENT_NAME
+               , c.POSITION
+               , a.EMAIL
+               , d.LOGIN_TIME
+               , a.MEMBER_STATUS
+            FROM EMPLOYEE a
+            JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+            LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+            LEFT JOIN LOGIN_DATA d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO
+           WHERE MEMBER_STATUS IN (0, 3)
+        ORDER BY a.EMPLOYEE_NAME ASC;
+    </select>
+
+    <!-- 사원 정보 조회 -->
+    <select id="getAccountByEmpID" parameterType="String" resultMap="AccountList">
+        SELECT a.EMPLOYEE_NO
+             , a.EMPLOYEE_NAME
+             , a.DEPARTMENT_NO
+             , a.PASSWORD
+             , a.EMAIL
+             , a.IMAGE
+             , b.AUTH_OF_ADMIN
+          FROM EMPLOYEE a
+          LEFT JOIN AUTHORIZATION b ON a.EMPLOYEE_NO = b.EMPLOYEE_NO
+         WHERE a.EMPLOYEE_NO = #{empID}
+    </select>
+
+    <!-- 사원 정보 수정 -->
+    <update id="updateAccount" parameterType="map">
+        UPDATE EMPLOYEE a
+          JOIN HUMAN_RESOURCE b ON a.EMPLOYEE_NO = b.EMPLOYEE_NO
+          JOIN AUTHORIZATION c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+           SET a.EMPLOYEE_NAME = #{empName}
+             , a.DEPARTMENT_NO = #{deptNo}
+             , b.POSITION = #{position}
+             , a.EMAIL = #{email}
+             , a.IMAGE = #{image}
+             , c.AUTH_OF_ADMIN = #{roleAdmin}
+         WHERE a.EMPLOYEE_NO = #{empID}
+    </update>
+
+    <!-- 활성화 사원별 권한 조회 -->
+    <select id="getActiveAccountRole" resultMap="AccountRole">
+          SELECT a.EMPLOYEE_NO
+               , a.EMPLOYEE_NAME
+               , b.DEPARTMENT_NAME
+               , c.POSITION
+               , d.AUTH_OF_DOCUMENT
+               , d.AUTH_OF_LEAVE
+               , d.AUTH_OF_DEPARTMENT
+               , d.AUTH_OF_NOTICE
+               , d.AUTH_OF_SCHEDULE
+            FROM EMPLOYEE a
+            JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+            LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+            LEFT JOIN AUTHORIZATION d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO
+           WHERE a.MEMBER_STATUS IN (1, 2)
+        ORDER BY a.EMPLOYEE_NAME ASC;
+    </select>
+
+    <!-- 사원 권한 변경 -->
+    <update id="updateRoles" parameterType="java.util.List">
+        <foreach collection="list" item="role" open="" close="" separator=";">
+            UPDATE AUTHORIZATION
+            SET AUTH_OF_DOCUMENT = #{role.roleDraft},
+            AUTH_OF_LEAVE = #{role.roleLeave},
+            AUTH_OF_DEPARTMENT = #{role.roleDepartment},
+            AUTH_OF_NOTICE = #{role.roleNotice},
+            AUTH_OF_SCHEDULE = #{role.roleSchedule}
+            WHERE EMPLOYEE_NO = #{role.empID}
+        </foreach>
+    </update>
+
+    <!-- 최근 접속 목록 가져오기 -->
+    <select id="getLatestAccessList" resultMap="AccountList">
+        SELECT a.EMPLOYEE_NO
+             , a.EMPLOYEE_NAME
+             , b.DEPARTMENT_NAME
+             , c.POSITION
+             , a.EMAIL
+             , d.LOGIN_TIME
+             , a.MEMBER_STATUS
+          FROM EMPLOYEE a
+          JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+          LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+          LEFT JOIN (SELECT EMPLOYEE_NO, LOGIN_TIME
+                       FROM (SELECT EMPLOYEE_NO, LOGIN_TIME,
+                                    ROW_NUMBER() OVER (PARTITION BY EMPLOYEE_NO ORDER BY LOGIN_TIME DESC) AS RN
+                               FROM LOGIN_DATA) sub
+                      WHERE RN = 1) d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO;
+    </select>
+
+    <select id="getAccessDetailByEmpID" parameterType="String" resultMap="AccountList">
+          SELECT a.EMPLOYEE_NO
+               , a.EMPLOYEE_NAME
+               , b.DEPARTMENT_NAME
+               , c.POSITION
+               , a.EMAIL
+               , d.LOGIN_TIME
+               , d.LOGIN_STATUS
+            FROM EMPLOYEE a
+            JOIN DEPARTMENT b ON a.DEPARTMENT_NO = b.DEPARTMENT_NO
+            LEFT JOIN HUMAN_RESOURCE c ON a.EMPLOYEE_NO = c.EMPLOYEE_NO
+            LEFT JOIN LOGIN_DATA d ON a.EMPLOYEE_NO = d.EMPLOYEE_NO
+           WHERE a.EMPLOYEE_NO = #{empID}
+        ORDER BY d.LOGIN_TIME DESC;
+    </select>
+
+    <!--  -->
+
+</mapper>

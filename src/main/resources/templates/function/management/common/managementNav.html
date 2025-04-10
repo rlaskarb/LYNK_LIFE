@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>managementNav</title>
+</head>
+<body>
+<nav th:fragment="managedNavFragment" class="nav-class">
+    <!-- 로고 영역 -->
+    <div class="nav-div-class">
+        <a class="nav-link" href="/">LYNK</a>
+    </div>
+
+    <!-- 메뉴바 영역 -->
+    <div class="menuContainer">
+        <div class="managementMenuContainer">
+            <h6 style="color: white; font-weight: normal;">Management</h6>
+            <li class="ManagementMenu">
+                <ul>
+                    <li><a href="/management/activeAccountList"><span class="arrow">-</span>활성화 계정 목록</a></li>
+<!--                    <li><a href="/management/activeAccountList"><span class="arrow">-</span>부서 관리</a></li>-->
+                    <li><a href="/management/accountRoleSetting"><span class="arrow">-</span>계정별 권한 설정</a></li>
+                    <li><a href="/management/latestAccessList"><span class="arrow">-</span>계정별 최근 접속 목록</a></li>
+                    <li><a href="/management/inactiveAccountList"><span class="arrow">-</span>비활성화 계정 목록</a></li>
+                </ul>
+            </li>
+        </div>
+    </div>
+
+    <!-- 돌아가기 영역 -->
+    <div class="exitContainer">
+        <img src="/images/back.png" alt="exit" data-value="exit">
+        <a href="/">관리 페이지 나가기</a>
+    </div>
+</nav>
+</body>
+</html>

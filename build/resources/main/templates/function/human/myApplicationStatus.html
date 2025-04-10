@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>나의 신청 현황</title>
+
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/lookUp.css}">
+    <link rel="stylesheet" th:href="@{/css/myApplicationStatus.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<nav th:replace="~{common/nav :: navFragment}" class="nav-class"></nav>
+
+<div class="right-container">
+    <header th:replace="~{common/header :: headerFragment}" class="header-class"></header>
+
+    <section class="main-content">
+        <div class="subHeader-class">
+            <a class="subHeaderLink-class" href="/">인사 관리</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/employee/attendance">근태 관리</a>
+            <label style="margin-left: 20px; margin-right: 20px"> > </label>
+            <a class="subHeaderLink-class" href="/employee/appStatus"
+               th:text="${session.roleAdmin == 1 ? '결재 승인 현황' : '나의 신청 현황'}"></a>
+        </div>
+
+        <article class="lookupSelect-class">
+            <select id="lookupSelect2" name="lookupSelect2" class="form-select">
+                <option value="상태">상태</option>
+                <option value="구분">구분</option>
+                <option value="이름">이름</option>
+            </select>
+            <input type="text" id="lookupInput2" placeholder="검색어를 입력해 주세요." class="form-control">
+            <button class="select-button" id="select-button-id">조 회</button>
+        </article>
+
+        <article class="account-list">
+            <div class="list-section">
+                <table class="activeAccountListHeader">
+                    <tr class="fix-th">
+                        <th style="width: 10%">상 태</th>
+                        <th style="width: 10%">구 분</th>
+                        <th style="width: 10%">부서명</th>
+                        <th style="width: 10%">이 름</th>
+                        <th style="width: 10%">직 책</th>
+                        <th style="width: 25%">신청 일시</th>
+                        <th style="width: 25%">결재 일시</th>
+                    </tr>
+                </table>
+                <div class="table-body-container" style="max-height: 500px; overflow-y: auto;">
+                    <table class="activeAccountListBody">
+                        <colgroup>
+                            <col style="width: 127px">
+                            <col style="width: 126px">
+                            <col style="width: 127px">
+                            <col style="width: 127px">
+                            <col style="width: 126px">
+                            <col style="width: 317px">
+                            <col style="width: 317px">
+                            <col>
+                        </colgroup>
+                        <tr>
+                            <tbody id="employee-table-body2" aria-disabled="true">
+                            <!-- fetch로 가져온 애 여기 추가됨!! -->
+                            </tbody>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </article>
+
+        <!-- 클릭 했을 때 상세 정보 나오는 애 -->
+<!--        <div id="myModal3" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">-->
+<!--            <div class="modal-dialog modal-lg2" role="document"> &lt;!&ndash; 모달 크기! &ndash;&gt;-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-header">-->
+<!--                        <h5 class="modal-title">연장 근로 조회</h5>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                    </div>-->
+<!--                    <div class="modal-body">-->
+<!--                        <label for="status">상 태</label>-->
+<!--                        <input type="text" id="status" class="form-control" disabled><br>-->
+<!--                        <label for="leader">담당자</label>-->
+<!--                        <input type="text" id="leader" class="form-control" disabled><br>-->
+<!--                        <label for="position">직 책</label>-->
+<!--                        <input type="text" id="position" class="form-control" disabled><br>-->
+<!--                        <label for="applicationOverTime">신청 일시</label><br>-->
+<!--                        <input type="datetime-local" id="applicationOverTime" class="form-control" disabled><br>-->
+<!--                        <label for="approvalOverTime">승인 일시</label><br>-->
+<!--                        <input type="datetime-local" id="approvalOverTime" class="form-control" disabled><br>-->
+<!--                        <label for="overTime">연장 근로 시간</label><br> &lt;!&ndash; 나중에 &ndash;&gt;-->
+<!--                        <input type="text" id="overTime" class="form-control" disabled><br>-->
+<!--                        <label for="workTime">근무 일시</label><br> &lt;!&ndash; 나중에 &ndash;&gt;-->
+<!--                        <input type="text" id="workTime" class="form-control" disabled>-->
+<!--                        <br>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: forestgreen">승인</button>-->
+<!--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: red">반려</button>-->
+<!--                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <div id="myModal4" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg2" role="document"> <!-- 모달 크기! -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">휴가 신청 조회</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="status2">상 태</label>
+                        <input type="text" id="status2" class="form-control" disabled><br>
+                        <label for="leader2">신청자</label>
+                        <input type="text" id="leader2" class="form-control" disabled><br>
+                        <label for="position2">직 책</label>
+                        <input type="text" id="position2" class="form-control" disabled><br>
+                        <label for="applicationVacTime">신청 일시</label><br>
+                        <input type="datetime-local" id="applicationVacTime" class="form-control" disabled><br>
+                        <label for="approvalVacTime">승인 일시</label><br>
+                        <input type="datetime-local" id="approvalVacTime" class="form-control" disabled><br>
+                        <label for="vacStartTime">휴가 시작일</label><br> <!-- 나중에 -->
+                        <input type="text" id="vacStartTime" class="form-control" disabled><br>
+                        <label for="vacEndTime">휴가 종료일</label><br> <!-- 나중에 -->
+                        <input type="text" id="vacEndTime" class="form-control" disabled>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: forestgreen"
+                                th:if="${session.roleAdmin == 1}"
+                                th:text="'승인'"></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: red"
+                                th:if="${session.roleAdmin == 1}"
+                                th:text="'반려'"></button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <aside th:replace="~{common/aside :: asideFragment}" class="aside-class"></aside>
+    <footer th:replace="~{common/footer :: footerFragment}" class="footer-class"></footer>
+
+</div>
+
+<script th:src="@{/js/myApplicationStatus.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/calendar.js}"></script>
+<!-- ① Popper.js 라이브러리 - 툴팁 , 팝오버 , 드롭다운 관리 -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<!-- ② Popper.js를 필요로 함 - 자바스크립트 파일 로드 - UI 구성 요소 쉽게 만들어줌 - 드롭다운 , 모달 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>
