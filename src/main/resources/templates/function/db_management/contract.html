@@ -77,6 +77,66 @@
             max-height: 80vh;
             overflow-y: auto;
         }
+
+        .custom-confirm-modal {
+            max-width: 400px; /* 너비 조절 */
+            margin: auto;
+        }
+
+        .custom-confirm-modal .modal-content {
+            height: auto; /* 필요에 따라 설정 */
+            max-height: 400px;
+            padding: 10px;
+        }
+
+        .custom-modal-result,
+        .custom-modal-error {
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .custom-modal-result .modal-content,
+        .custom-modal-error .modal-content {
+            height: auto;
+            max-height: 400px;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .custom-modal-result .modal-body,
+        .custom-modal-error .modal-body {
+            text-align: center;
+            padding: 20px 15px;
+        }
+
+        .custom-modal-result .modal-footer,
+        .custom-modal-error .modal-footer {
+            justify-content: center;
+        }
+
+
+        /* 폼 입력 요소 */
+        .form-control,
+        .form-select {
+            font-size: 17px; /* 기존보다 +3px */
+            padding: 5px 15px;
+            height: 45px; /* 높이 증가 */
+            width: 50%; /* 너비 증가 */
+        }
+
+        /* 라벨 글자 크기 확대 */
+        .form-group label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* 버튼 크기 증가 */
+        .btn-def {
+            font-size: 13px;
+            padding: 6px 12px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -167,7 +227,7 @@
                             <div class="form-group">
                                 <label for="insuranceCode">보험회사</label>
                                 <select id="insuranceCode" name="insuranceCode" class="form-select">
-                                    <!-- 옵션은 JavaScript에서 동적으로 추가 -->
+                                    <!-- 옵션은 JavaScript 에서 동적으로 추가 -->
                                 </select>
                             </div>
 
@@ -232,7 +292,7 @@
                             </div>
                             <!-- 주민등록번호 -->
                             <div class="form-group">
-                                <label for="customerSsn">계약자 주민등록번호</label>
+                                <label for="customerSsn">계약자 주민번호</label>
                                 <input type="text" id="customerSsn" name="customerSsn" class="form-control" required placeholder="000000-0000000">
                             </div>
 
@@ -297,7 +357,7 @@
         </article>
         <!--확인모달-->
         <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm custom-confirm-modal">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="confirmModalLabel">확인</h5>
@@ -316,7 +376,7 @@
 
         <!--저장완료 모달-->
         <div id="resultModal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm custom-modal-result">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">알림</h5>
@@ -333,7 +393,7 @@
         </div>
         <!-- 오류 모달 -->
         <div id="errorModal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm custom-modal-error">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">오류</h5>

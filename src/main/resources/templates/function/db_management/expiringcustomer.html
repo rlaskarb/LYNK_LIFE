@@ -70,6 +70,27 @@
             text-align: left;
             border: 1px solid #ddd; /* 셀 테두리 */
         }
+
+        .scroll-table-wrapper {
+            max-height: 300px;       /* 원하는 높이로 조절 가능 */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+
+        .fixed-header-table,
+        .scroll-body-table {
+            table-layout: fixed;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .fixed-header-table th,
+        .scroll-body-table td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
     </style>
 </head>
 
@@ -134,21 +155,29 @@
 
 
             <!-- 결과 테이블 -->
-            <table class="table ">
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>계약자/피보험자</th>
-                    <th>보험회사</th>
-                    <th>상품명</th>
-                    <th>만기일자</th>
-                    <th>계약번호</th>
-                    <th>부서명/설계사/사번</th>
-                </tr>
-                </thead>
+
+        <table class="table table-bordered fixed-header-table">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>계약자/피보험자</th>
+                <th>보험회사</th>
+                <th>상품명</th>
+                <th>만기일자</th>
+                <th>계약번호</th>
+                <th>부서명/설계사/사번</th>
+            </tr>
+            </thead>
+        </table>
+
+        <div class="scroll-table-wrapper">
+            <table class="table table-bordered scroll-body-table">
                 <tbody id="resultTable">
+                <!-- 자바스크립트로 동적으로 채워지는 영역 -->
                 </tbody>
             </table>
+        </div>
+
 
 
     </section>

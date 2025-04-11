@@ -47,8 +47,8 @@
                         <tbody>
 <!--                        data 어쩌고는 클릭 했을 때 오른쪽 등록 란으로 이동하는 이벤트용 데이터 -->
                         <tr th:each="abc : ${list}" class="clickable-row"
-                            th:data-picture="@{${session.image}}"
-                            th:data-id="${abc.id}"
+                            th:data-picture="@{${abc.image != null ? abc.image : '/images/default.png'}}"
+                            th:data-id="${abc.employeeNo}"
                             th:data-name="${abc.name}"
                             th:data-department="${abc.departmentDTO.depName}"
                             th:data-position="${abc.humanDTO.position}"
@@ -58,7 +58,7 @@
                             <td> <!--  인사 등록 필요한 애들-->
                                 <img th:src="@{${abc.image != null ? abc.image : '/images/default.png'}}" alt="사진" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                             </td>
-                            <td th:text="${abc.id}"></td>
+                            <td th:text="${abc.employeeNo}"></td>
                             <td th:text="${abc.name}"></td>
                             <td th:text="${abc.departmentDTO.depName}"></td>
                             <!--                        <td th:text="${abc.humanDTO.position}"></td>-->

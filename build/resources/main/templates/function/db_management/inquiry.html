@@ -20,7 +20,17 @@
     padding: 4px;
 }
 
+.scroll-table-wrapper {
+    max-height: 400px;      /* 필요 시 조절 */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}
 
+/* 위쪽 테이블과 아래쪽 테이블 너비 및 정렬 맞춤 */
+.contract-table {
+    table-layout: fixed;
+    width: 100%;
+}
     </style>
 </head>
 
@@ -55,9 +65,9 @@
             </div>
         </article>
         <article>
-            <table class="table table-bordered">
+            <!-- 헤더 테이블 (고정) -->
+            <table class="table table-bordered contract-table">
                 <thead>
-
                 <tr>
                     <th>번호</th>
                     <th>계약자/피보험자</th>
@@ -66,9 +76,17 @@
                     <th>계약번호</th>
                     <th>부서명/설계사/사번</th>
                 </tr>
-                <tbody id="contractTableBody"></tbody>
                 </thead>
             </table>
+
+            <!-- 스크롤이 적용될 테이블 바디 -->
+            <div class="scroll-table-wrapper">
+                <table class="table table-bordered contract-table">
+                    <tbody id="contractTableBody">
+                    <!-- JavaScript 가 데이터를 여기에 채워줌 -->
+                    </tbody>
+                </table>
+            </div>
         </article>
 
 

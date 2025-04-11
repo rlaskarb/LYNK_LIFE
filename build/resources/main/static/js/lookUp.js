@@ -34,13 +34,15 @@ function renderTable(data) {
         // row.setAttribute("data-image" , item.image);
         row.setAttribute("data-department", item.departmentDTO.depName || "");
 
+        row.setAttribute("data-image", item.image || ""); // 이미지 속성 추가
+
         row.innerHTML = ` <!-- 얘는 페이지 들어오면 나오는 애 -->
             <td>${item.id}</td>
             <td>${item.name}</td>
             <td>${item.departmentDTO.depName || "N/A"}</td>
-            <td>${item.humanDTO.position}</td>
-            <td>${item.humanDTO.employeementStatus}</td>
-            <td>${item.humanDTO.phoneNumber}</td>
+            <td>${item.humanDTO.position || "미 정"}</td>
+            <td>${item.humanDTO.employeementStatus || "미 정"}</td>
+            <td>${item.humanDTO.phoneNumber || "미 정"}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -91,7 +93,7 @@ document.getElementById("employee-table-body").addEventListener("click", (event)
     const row = event.target.closest("tr"); // 클릭된 행 가져오기
     if (row) {
         const cells = row.getElementsByTagName("td"); // 클릭한 행 모든 td 가져오기
-
+        const image = row.getAttribute("data-image");
         // 행의 ID 및 Join Date 가져오기
         const employeeId = cells[0].textContent; // 사번
         const joinDate = row.getAttribute("data-join-date");
@@ -108,6 +110,15 @@ document.getElementById("employee-table-body").addEventListener("click", (event)
         document.getElementById("editPhone").value = cells[5].textContent;
         document.getElementById("editJoinDate").value = joinDate || ""; // Join Date 데이터 설정 (없으면 빈 값)
         // document.getElementById("editImage").value = image || "image 없음";
+
+        // 이미지 처리
+        if (image) {
+            document.getElementById("editImage").src = image;
+            document.getElementById("editImage").alt = "";
+        } else {
+            document.getElementById("editImage").src = "";
+            document.getElementById("editImage").alt = "이미지가 없습니다";
+        }
 
         // 모달 초기화 해야 다른 거 눌렀을 때 수정 버튼 계속 출력됨
         document.querySelectorAll("#myModal .modal-right input, #myModal .modal-right select")

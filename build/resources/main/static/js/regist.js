@@ -67,26 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(targetNode, { childList: true, subtree: true });
 });
 
-//     // 이메일 도메인 선택 시 "직접 입력" 활성화
-//     document.getElementById('emailDomain').addEventListener('change', function () {
-//     const customEmailDomain = document.getElementById('customEmailDomain');
-//     if (this.value === "직접 입력") {
-//     customEmailDomain.style.display = "inline-block";
-//     customEmailDomain.focus();
-// } else {
-//     customEmailDomain.style.display = "none";
-//     customEmailDomain.value = "";
-// }
-// });
-//     function combineEmail() {
-//     const emailName = document.getElementById('emailName').value;
-//     const emailDomain = document.getElementById('emailDomain').value;
-//     const customDomain = document.getElementById('customEmailDomain').value;
-//
-//     // 도메인이 "직접 입력"일 경우 커스텀 도메인 사용
-//     const fullEmail = emailName + "@" + (emailDomain === "직접 입력" ? customDomain : emailDomain);
-//
-//     // hidden input에 저장
-//     document.getElementById('fullEmail').value = fullEmail;
-//     console.log("전체 이메일:", fullEmail);
-// }
+document.addEventListener("DOMContentLoaded", () => {
+    // 취소 버튼 이벤트 추가
+    const cancelButton = document.querySelector(".cancle-button");
+    cancelButton.addEventListener("click", () => {
+        // 사진 초기화
+        const photoElement = document.getElementById("formPhoto");
+        photoElement.innerHTML = "사 진"; // 초기 텍스트로 복구
+
+        // 입력 필드 초기화
+        document.getElementById("formId").value = "";
+        document.getElementById("formName").value = "";
+        document.getElementById("formDepartment").value = "";
+        document.getElementById("formEmail").value = "";
+        // 추가 필드 초기화 필요시 아래 항목들 추가
+        document.getElementById("position").value = "인턴"; // 초기값 설정
+    });
+});

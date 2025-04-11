@@ -31,8 +31,13 @@ function renderEmployeeList(employeeData) {
     const list = document.getElementById('employeeList');
     list.innerHTML = ''; // 기존 데이터 초기화
 
+    // ✅ 이름 기준으로 정렬 (가나다순)
+    employeeData.sort((a, b) => {
+        return a.employeeName.localeCompare(b.employeeName, 'ko'); // 한글 정렬!
+    });
+
     if (employeeData.length === 0) {
-        list.innerHTML = '<li class="list-group-item">검색 결과가 없습니다.</li>'; // 검색 결과 없을 시 메시지 표시
+        list.innerHTML = '<li class="list-group-item">검색 결과가 없습니다.</li>';
         return;
     }
 
@@ -81,6 +86,24 @@ document.getElementById('customerSearch').addEventListener('input', function () 
     });
 });
 
+//계약자 주민등록번호 하이폰 처리 함수
+function formatSsnWithHyphen(value) {
+    let onlyNumbers = value.replace(/[^0-9]/g, '');
+    if (onlyNumbers.length > 6) {
+        return onlyNumbers.slice(0, 6) + '-' + onlyNumbers.slice(6, 13);
+    }
+    return onlyNumbers;
+}
+// 전화번호 하이폰 처리 함수
+function formatPhoneNumber(value) {
+    const onlyNumbers = value.replace(/[^0-9]/g, '');
+    if (onlyNumbers.length < 4) return onlyNumbers;
+    if (onlyNumbers.length < 8) {
+        return onlyNumbers.slice(0, 3) + '-' + onlyNumbers.slice(3);
+    }
+    return onlyNumbers.slice(0, 3) + '-' + onlyNumbers.slice(3, 7) + '-' + onlyNumbers.slice(7, 11);
+}
+
 // 고객 데이터를 렌더링하는 함수
 function renderCustomerList(customerData) {
     const list = document.getElementById('customerList');
@@ -91,7 +114,6 @@ function renderCustomerList(customerData) {
         return;
     }
 
-
     // 고객 데이터를 기반으로 목록 생성
     customerData.forEach(customer => {
         const li = document.createElement('li');
@@ -100,9 +122,9 @@ function renderCustomerList(customerData) {
 
         li.addEventListener('click', () => {
             document.getElementById('customerName').value = customer.customerName; // 선택한 고객 이름 설정
-            document.getElementById('customerSsn').value = customer.customerSsn; // 선택한 고객 주민번호 설정
+            document.getElementById('customerSsn').value = formatSsnWithHyphen(customer.customerSsn); // 선택한 고객 주민번호 설정
             document.getElementById('customerEmail').value = customer.customerEmail; // 선택한 고객 이메일 설정
-            document.getElementById('customerMobile').value = customer.customerMobile; // 선택한 고객 전화번호 설정
+            document.getElementById('customerMobile').value = formatPhoneNumber(customer.customerMobile); // 선택한 고객 전화번호 설정
             document.getElementById('customerNo').value = customer.customerNo; // 선택한 고객 번호 설정
 
 
@@ -134,6 +156,16 @@ function renderCustomerList(customerData) {
         list.appendChild(li);
     });
 }
+
+
+// 피보험자 주민등록번호 자동 하이픈
+document.getElementById('insuredSsn').addEventListener('input', function (e) {
+    let val = e.target.value.replace(/[^0-9]/g, '');
+    if (val.length > 6) {
+        val = val.slice(0, 6) + '-' + val.slice(6, 13);
+    }
+    e.target.value = val;
+});
 
 //======================================================================================================================
 
@@ -344,7 +376,7 @@ function showCompletionModal(message) {
     // "확인" 버튼 클릭 시 이전 페이지로 돌아가기
     document.getElementById('completionConfirm').addEventListener('click', function () {
         resultModal.hide();
-        window.history.back(); // 이전 페이지로 돌아가기
+        window.location.href="/"; // 이전 페이지로 돌아가기
     },{once:true});
 }
 
