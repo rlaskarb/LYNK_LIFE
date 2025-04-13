@@ -112,11 +112,18 @@ function updateTable(data) {
 }
 // =====================================================================================================
 
-// handleMonthChange 함수 추가
 function handleMonthChange() {
-    const selectedMonth = document.getElementById("monthDropdown").value;
+    const selectedMonth = parseInt(document.getElementById("monthDropdown").value);
     if (selectedMonth) {
         const year = new Date().getFullYear();
-        fetchData({ year, month: selectedMonth });
+
+        // 시작일: YYYY-MM-01
+        const startDate = `${year}-${String(selectedMonth).padStart(2, '0')}-01`;
+
+        // 마지막날 계산: new Date(year, month, 0) = 해당 월의 마지막 날
+        const lastDay = new Date(year, selectedMonth, 0).getDate();
+        const endDate = `${year}-${String(selectedMonth).padStart(2, '0')}-${lastDay}`;
+
+        fetchData({ startDate, endDate });
     }
 }

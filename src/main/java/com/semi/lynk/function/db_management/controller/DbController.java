@@ -243,19 +243,11 @@ public class DbController {
 
     @GetMapping("/expiringcustomer/search")
     @ResponseBody
-    public List<ExpiringCustomerDTO>  searchExpiringCustomers(
-            @RequestParam(required = false) String customerName,
-            @RequestParam(required = false) String insuredName,
-            @RequestParam(required = false) String employeeName,
-            @RequestParam(required = false) String month){
-
-        System.out.println("customerName = " + customerName);
-        System.out.println("customerName = " + insuredName);
-        System.out.println("customerName = " + employeeName);
-
-        return dbService.searchExpiringCustomers(
-                customerName,insuredName,employeeName,month);
-
+    public List<ExpiringCustomerDTO> searchExpiringCustomersByDateRange(
+            @RequestParam String startDate,
+            @RequestParam String endDate
+    ) {
+        return dbService.searchExpiringCustomersByDateRange(startDate, endDate);
     }
 
 

@@ -83,13 +83,8 @@ public class DbService {
 //===================================================================================================================
     //만기도래 조회
 
-    public List<ExpiringCustomerDTO> searchExpiringCustomers(String customerName,
-                                                             String insuredName,
-                                                             String employeeName,
-                                                             String month) {
-        List<ExpiringCustomerDTO> customers = dbMapper.searchExpiringCustomers(customerName, insuredName, employeeName, month);
-        System.out.println("customers = " + customers);
-        return customers;
+    public List<ExpiringCustomerDTO> searchExpiringCustomersByDateRange(String startDate, String endDate) {
+        return dbMapper.selectExpiringCustomersByDateRange(startDate, endDate);
     }
 
 

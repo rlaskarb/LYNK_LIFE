@@ -187,7 +187,7 @@
     </select>
 
 
-    <select id="selectExpiringCustomersByMonth" resultType="com.semi.lynk.function.db_management.model.dto.ExpiringCustomerDTO">
+    <select id="selectExpiringCustomersByDateRange" resultType="com.semi.lynk.function.db_management.model.dto.ExpiringCustomerDTO">
         SELECT
         ct.contract_mng_no AS contractMngNo,
         c.customer_name AS customerName,
@@ -219,8 +219,8 @@
         INNER JOIN employee e ON ct.employee_no = e.employee_no
         INNER JOIN department d ON e.department_no = d.department_no
         WHERE
-        YEAR(DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY)) = #{year}
-        AND MONTH(DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY)) = #{month};
+        DATE_ADD(ct.contract_date, INTERVAL (ct.contract_duration * 365) DAY)
+        BETWEEN #{startDate} AND #{endDate}
     </select>
 
 
