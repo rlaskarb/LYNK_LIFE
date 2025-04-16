@@ -47,10 +47,44 @@
 
 <a name = "기술-스택"></a>
 ## 🧰 기술 스택
-- Java 17, Spring Boot, MyBatis
-- MySQL
-- HTML/CSS, Bootstrap, JavaScript
-- Chart.js
+
+
+### 🧠 Backend
+
+| 구분             | 사용 기술 |
+|------------------|-----------|
+| **프레임워크 & 언어** | Java 17, Spring Boot |
+| **ORM & DB**        | MyBatis, JDBC |
+| **DBMS**            | MySQL |
+| **템플릿 엔진**     | Thymeleaf |
+| **API 설계**        | RESTful API |
+| **입력 검증**       | Spring Validation |
+| **로깅 / AOP**      | Lombok (@Slf4j) |
+| **배포 환경**       | 로컬 환경 (개인 개발 기준) |
+| **기타**            | ojdbc8 / ojdbc11 드라이버, DevTools |
+
+<hr/>
+
+### 🎨 Frontend
+
+| 구분             | 사용 기술 |
+|------------------|-----------|
+| **기본 기술**       | HTML5, CSS3, JavaScript |
+| **UI 프레임워크**   | Bootstrap |
+| **시각화 도구**     | Chart.js |
+| **모달 처리**       | Bootstrap Modal |
+| **스타일링**       | Flexbox 기반 레이아웃, 반응형 일부 대응 |
+
+<hr/>
+
+### 🛠 기타
+
+| 구분             | 사용 기술 |
+|------------------|-----------|
+| **버전 관리**       | Git, GitHub |
+| **개발 방식**       | MVC 구조 기반 설계 |
+| **요소 연동**       | 고객/상품/설계사 정보 연동 기능 |
+| **성과 시각화**     | 실적 현황판 (금액/계약 건수 실시간 반영) |
 
 
 <br/>
@@ -111,13 +145,13 @@
 <hr/>
 
 <a name="논리--물리-데이터-모델링"></a>
-## 📌 물리 데이터 모델
+## 📌 논리 데이터 모델링 ( 총 20개 테이블 )
 ![image](https://github.com/user-attachments/assets/f8f6b537-4e9b-44d1-817d-df0fff28eca1)
 <br><br>
 
 <br/>
 <hr/>
-<hr/>
+
 
 <br><br>
 
