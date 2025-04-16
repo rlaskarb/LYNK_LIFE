@@ -1,5 +1,6 @@
 # LYNK Insurance
-[image](https://github.com/user-attachments/assets/633b6506-be48-484d-bebc-601eb000f785)
+![보험이미지](https://github.com/user-attachments/assets/90084dab-0f6b-4e53-80ff-6eef8a848f14)
+
 
 
 ### ⌚ 프로젝트 기간 : 2024.11.22 ~ 2025.01.03
