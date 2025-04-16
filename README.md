@@ -1,59 +1,50 @@
 # LYNK Insurance
 ![header](https://capsule-render.vercel.app/api?type=waving&height=180&text=LYNK&fontAlign50&backgroundColor=333333&fontWeight=bold&fontColor=BBE8A7)
 
-### ⌚ 프로젝트 기간 : 2024.11.18 ~ 2025.01.03
+### ⌚ 프로젝트 기간 : 2024.11.22 ~ 2025.01.03
 <br><br><br>
 
-## 🛴 프로젝트 소개 - LYNK Insurance
-중소기업 보험회사를 위한 그룹웨어 시스템.
+## ✅  프로젝트 소개 - LYNK Insurance
+보험회사를 위한 그룹웨어 시스템을 개발하였으며, 주요 기능으로는 인사관리, 전자결재, DB관리, 계약관리 등을 포함하고 있습니다.  
+업무 효율성과 관리 편의성을 높이기 위해 직원 관리, 문서 승인 자동화, 데이터베이스 최적화, 계약 정보의 체계적 관리에 초점을 맞춰 개발하였습니다.
 
-그룹웨어란 서류, 전화, 메모 등으로 수행하던 업무를 전자 문서화하고 아카이빙하여 사고의 여파를 최소화하는 컴퓨터 프로그램입니다. 
+이 프로젝트에서 저는 **DB관리와 계약관리 기능을 담당하여**,  
+고객 등록, 계약 등록, 상품 등록, 계약 조회 등의 기능을 구현하였습니다.  
+작업자가 실수 없이 효율적으로 사용할 수 있도록, **실사용자의 관점에서 인터페이스와 기능 흐름에 집중하여 개발**하였습니다.
 <br><br>
 
 ## 📖 프로젝트 문서
 📒[노션](https://www.notion.so/ohgiraffers/LYNK-insurance-41442a14f58b4933b2521f1ad1b6b12c)
 🎉[피그마](https://www.figma.com/design/Q4jZS9WpOBIHCMfMs3R3Tb/LYNK?node-id=0-1&p=f&t=QuIOA9sE0bmWyK9q-0)
 
-<br>
-
-# ✈ LYNK 그룹웨어 사용 시 이점
-- 업무 프로세스 구조화: 업무 매뉴얼을 기반으로 프로세스를 구조화하여 실수를 줄입니다.
-- 생산성 증대: 일관된 자료 제공으로 업무 생산성을 높입니다.
-- 정보 공유: 내부 오류를 최소화하기 위해 정보 공유 및 배포를 지원합니다.
-- 인사 서비스: 인적 관리 시스템을 통해 일관된 인사 서비스를 제공합니다.
-- 데이터 파악 용이: 관리자가 대규모 데이터를 쉽게 파악할 수 있습니다.
-- 접근성 향상: 결제 권한 체계에 대한 접근성을 높입니다.
 
 <br><br>
 
-## 🙋‍♂️ 팀 소개
-
-| 윤이정 | 김남규 | 이승현 | 김규남 |
-|:------:|:------:|:------:|:------:|
-| <img src="https://github.com/user-attachments/assets/c6d1c3c9-6bfb-462c-b6ac-2150dca7223b" width="150" alt="이정" /> <br> | <img src="https://github.com/user-attachments/assets/100cf090-1861-469e-a772-24f79f80b61e" width="150" alt="남규" /> <br> | <img src="https://github.com/user-attachments/assets/f4fe1877-8b7c-453a-aca5-6d4292e8f64c" width="150" alt="승현" /> <br> | <img src="https://github.com/user-attachments/assets/8c17bf3d-01f9-4ca9-b717-42af4c754fb2" width="150" alt="규남" /> <br> |
-|:------:|:------:|:------:|:------:|
-|   PM   |  DBA   |  DBA   | 형상관리 |
-
-<br><br>
-
-### 🧩 역할 분담
-- **이정 (PM)** : 로그인 / 관리자 권한
-- **남규 (DBA)** : 계약 관리 / DB 관리
-- **승현 (DBA)** : 공지사항 / 전재결재
-- **규남 (형상관리)** : 인사관리
-<br><br><br><br>
 
 ## 🗺 물리 데이터 모델
 ![image](https://github.com/user-attachments/assets/f8f6b537-4e9b-44d1-817d-df0fff28eca1)
 <br><br><br><br>
 
-## 📚 개발 환경
-| 구분         | 내용               |
-|--------------|--------------------|
-| **사용 언어** | Java, JavaScript    |
-| **DBMS**     | MySQL               |
-| **Framework**| Spring Boot, MyBatis|
-| **Front (Design)** | HTML, CSS      |
+
+## 🧰 기술 스택
+- Java 17, Spring Boot, MyBatis
+- MySQL
+- HTML/CSS, Bootstrap, JavaScript
+- Chart.js
+
+## ⚙️ 주요 기능
+- 고객/계약/상품/설계사 관리
+- 만기계약 고객 필터링 조회
+- 계약 상세 페이지 + 모달 기반 인터랙션
+- 실시간 영업 실적 현황판 (금액 & 건수)
+
+## 🙋 담당 영역
+- DB 및 계약관리 기능 전체 개발
+- 사용자 경험 중심 화면 설계 및 예외처리
+- 만기일 계산 로직 및 조건 필터링 쿼리 작성
+
+## 📷 화면 예시 (캡처 이미지 넣기)
+
 
 <br><br>
 
