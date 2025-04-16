@@ -1,5 +1,6 @@
 # LYNK Insurance
-![header](https://capsule-render.vercel.app/api?type=waving&height=180&text=LYNK&fontAlign50&backgroundColor=333333&fontWeight=bold&fontColor=BBE8A7)
+![header]![image](https://github.com/user-attachments/assets/633b6506-be48-484d-bebc-601eb000f785)
+
 
 ### ⌚ 프로젝트 기간 : 2024.11.22 ~ 2025.01.03
 <br><br>
