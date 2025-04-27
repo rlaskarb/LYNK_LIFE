@@ -27,7 +27,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql.railway.internal:3306/railway?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://centerbeam.proxy.rlwy.net:19372/railway?serverTimezone=Asia/Seoul
     username: root
     password: XLkxFtTmIfrwcbxeOdCtINmKZcVrnFIP
 
