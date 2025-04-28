@@ -89,7 +89,7 @@ public class DbController {
 
     // 공통 상품 등록
     @PostMapping("/{company}")
-    public ResponseEntity<String> registerProduct(@RequestBody ProductManageDTO productManageDTO) {
+    public ResponseEntity<String> registerProduct(@PathVariable String company, @RequestBody ProductManageDTO productManageDTO) {
         dbService.insuranceRegistration(productManageDTO);
         return ResponseEntity.ok("Product registered successfully");
     }
@@ -97,8 +97,8 @@ public class DbController {
     // 공통 상품 조회
     @GetMapping("/{company}/products")
     @ResponseBody
-    public ResponseEntity<List<ProductManageDTO>> getProductsByCompany() {
-        List<ProductManageDTO> productManage = dbService.getProductsByCompany();
+    public ResponseEntity<List<ProductManageDTO>> getProductsByCompany(@PathVariable String company) {
+        List<ProductManageDTO> productManage = dbService.getProductsByCompany(company);
         return ResponseEntity.ok(productManage);
     }
 

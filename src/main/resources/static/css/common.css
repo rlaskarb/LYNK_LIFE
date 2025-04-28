@@ -11,7 +11,7 @@ body {
 
 .nav-class {
     background-color: #2D2D2D; /* 왼쪽 영역 배경색 */
-    width: 280px;
+    width: 240px;
     height: 100%; /* 전체 높이 */
     padding: 20px;
     position: relative;

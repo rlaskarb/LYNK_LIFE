@@ -28,8 +28,8 @@ public class DbService {
         dbMapper.insertProduct(productManageDTO);
     }
 
-    public List<ProductManageDTO> getProductsByCompany() {
-        return dbMapper.selectProductsByCompany();
+    public List<ProductManageDTO> getProductsByCompany(String company) {
+        return dbMapper.selectProductsByCompany(company);
     }
 
     public void deleteProductByCompany(String company, String productNo) {

@@ -13,9 +13,10 @@ public interface DbMapper {
 
     void insertProduct(ProductManageDTO productManageDTO);
 
-    List<ProductManageDTO> selectProductsByCompany();
+    List<ProductManageDTO> selectProductsByCompany(@Param("company") String company);
 
-    void deleteProductByCompany(String company, String productNo);
+    void deleteProductByCompany(@Param("company") String company, @Param("productNo") String productNo);
+
 
 //========================================================================
 

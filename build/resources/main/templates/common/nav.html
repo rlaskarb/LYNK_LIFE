@@ -33,8 +33,8 @@
                     <span class="arrow">></span>인사관리
                 </a>
                 <ul class="subMenu">
-                    <li th:if="${session.roleAdmin == 1}"><a href="/employee/inform">인사정보</a></li> <!-- session으로 받아야 다른 페이지 넘어 가도 접근할 수 있음 -->
-                    <li th:if="${session.roleAdmin == 1}"><a href="/employee/regist">인사등록</a></li> <!-- session으로 받아야 다른 페이지 넘어 가도 접근할 수 있음 -->
+                    <li><a href="/employee/inform">인사정보</a></li>
+                    <li><a href="/employee/regist">인사등록</a></li>
                     <li><a href="/employee/attendance">근태관리</a></li>
                 </ul>
             </li>
