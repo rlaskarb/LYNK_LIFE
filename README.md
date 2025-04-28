@@ -18,6 +18,7 @@
 - [기술 스택](#기술-스택)
 - [기능 설명](#기능-설명)
 - [논리 & 물리 데이터 모델링](#논리--물리-데이터-모델링)
+- 🚀 <a href="https://lynklife-production.up.railway.app" target="_blank">배포된 웹사이트 보기</a> (id:123/pwd:123)
 
 
 <br/>
