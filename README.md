@@ -48,6 +48,12 @@
 설계사, 고객, 상품 정보를 자동으로 불러오는 방식을 적용하여
 사용자의 실수를 최소화하고 업무 효율성을 높였습니다.
 
+#### ✅ 서비스 배포 및 운영
+배포는 Railway를 통해 진행하였으며,
+Spring Boot 애플리케이션을 Railway 서버에 호스팅하여
+누구나 웹 브라우저를 통해 실제 서비스에 접속할 수 있도록 구성했습니다. 
+
+
 📒[노션](https://www.notion.so/ohgiraffers/LYNK-insurance-41442a14f58b4933b2521f1ad1b6b12c)
 🎉[피그마](https://www.figma.com/design/Q4jZS9WpOBIHCMfMs3R3Tb/LYNK?node-id=0-1&p=f&t=QuIOA9sE0bmWyK9q-0)
 
@@ -98,6 +104,7 @@
 | **개발 방식**       | MVC 구조 기반 설계 |
 | **요소 연동**       | 고객/상품/설계사 정보 연동 기능 |
 | **성과 시각화**     | 실적 현황판 (금액/계약 건수 실시간 반영) |
+| **배포 플랫폼**     | Railway (Spring Boot 배포) |
 
 
 <br/>
