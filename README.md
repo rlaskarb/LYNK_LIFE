@@ -1,7 +1,8 @@
 # ⛱️ LYNK Insurance!
 
+
 <p align="center">
-<img src="https://github.com/user-attachments/assets/90084dab-0f6b-4e53-80ff-6eef8a848f14" alt="보험 이미지" style="width: 100%;" />
+<img src="https://github.com/user-attachments/assets/98529931-a7b0-4666-b22f-576b381bbea2" alt="보험메인이미지" style="width: 80%" />
   <br/>
   <em>고객을 놓치지 않기 위해, 설계사를 지키는 그룹웨어의 가치</em>
 </p>
