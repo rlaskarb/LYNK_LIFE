@@ -1,12 +1,35 @@
+# application.yml (공통)
+
+spring:
+  profiles:
+    active: local
+---
+# application-local.yml (로컬 전용)
+
+server:
+  port: 8080
+
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres.railway.internal:5432/railway
-    username: postgres
-    password: ehCJvhZJSdrXfcGhKsLzNNNbIhVFbdAn
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lynkdb?serverTimezone=Asia/Seoul
+    username: lynk
+    password: lynk
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
+---
+# application-prod.yml (배포 전용)
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://centerbeam.proxy.rlwy.net:19372/railway?serverTimezone=Asia/Seoul
+    username: root
+    password: XLkxFtTmIfrwcbxeOdCtINmKZcVrnFIP
+
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
