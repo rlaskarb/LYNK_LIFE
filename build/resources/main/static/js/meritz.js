@@ -73,7 +73,7 @@ async function loadProducts() {
     const products = await response.json();
 
 
-    const filteredProducts = products.filter(product => product.productCategory === filterCategory);
+    const filteredProducts = products.filter(product => Number(product.productCategory) === filterCategory);
 
     const productList = document.getElementById('productList'); // 상품 목록을 표시할 html 요소
     productList.innerHTML = '';

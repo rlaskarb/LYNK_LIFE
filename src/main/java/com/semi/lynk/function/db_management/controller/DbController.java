@@ -98,8 +98,29 @@ public class DbController {
     @GetMapping("/{company}/products")
     @ResponseBody
     public ResponseEntity<List<ProductManageDTO>> getProductsByCompany(@PathVariable String company) {
-        List<ProductManageDTO> productManage = dbService.getProductsByCompany(company);
+        int companyCode = getCompanyCode(company);
+        if (companyCode == -1) {
+            return ResponseEntity.badRequest().body(Collections.emptyList());
+        }
+        List<ProductManageDTO> productManage = dbService.getProductsByCompany(String.valueOf(companyCode));
         return ResponseEntity.ok(productManage);
+    }
+
+
+    private int getCompanyCode(String company) {
+        switch (company.toLowerCase()) {
+            case "meritz": return 1;
+            case "hyundai": return 2;
+            case "hanwha": return 3;
+            case "samsung": return 4;
+            case "dbins": return 5;
+            case "metlife": return 31;
+            case "hanwhalife": return 32;
+            case "shinhan": return 33;
+            case "heungkuk": return 34;
+            case "lina": return 35;
+            default: return -1; // 또는 예외 던지기
+        }
     }
 
     // 공통 상품 삭제
