@@ -78,7 +78,6 @@ Spring Boot 애플리케이션을 Railway 서버에 호스팅하여 <br/>
 | **API 설계**        | RESTful API |
 | **입력 검증**       | Spring Validation |
 | **로깅 / AOP**      | Lombok (@Slf4j) |
-| **배포 환경**       | 로컬 환경 (개인 개발 기준) |
 | **기타**            | ojdbc8 / ojdbc11 드라이버, DevTools |
 
 
