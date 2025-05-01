@@ -18,7 +18,10 @@
 - [기술 스택](#기술-스택)
 - [기능 설명](#기능-설명)
 - [논리 & 물리 데이터 모델링](#논리--물리-데이터-모델링)
+
 - [배포된 웹사이트 바로가기](https://lynklife-production.up.railway.app/login) [ID:123/PWD:123]
+
+- [맥주ERP GitHub 바로 가기 ](https://github.com/rlaskarb/QualityCore)  
 
 
 <br/>
