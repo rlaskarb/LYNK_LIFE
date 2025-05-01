@@ -59,7 +59,7 @@ Railway를 통한 Spring Boot 애플리케이션 배포를 직접 수행하였�
 🎉[피그마](https://www.figma.com/design/Q4jZS9WpOBIHCMfMs3R3Tb/LYNK?node-id=0-1&p=f&t=QuIOA9sE0bmWyK9q-0)
 
 
-- [🔝 맨 위로 가기](#top)
+
   
 <br/>
 <hr/>
